@@ -184,10 +184,10 @@ button {
 } */
 
 /*==================== MEDIA QUERIES ====================*/
-@media screen and (max-width: 350px) {
+@media screen and (min-width: 320px) {
   .container {
-    margin-left: var(--mb-1);
-    margin-right: var(--mb-1);
+    margin-left: var(--mb-0-5);
+    margin-right: var(--mb-0-5);
   }
 }
 

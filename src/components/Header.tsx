@@ -19,7 +19,17 @@ const Header: React.FC = () => {
           <ul className="nav__list grid">
             <li className="nav__item">
               <a href="#home" className="nav__link active-link">
-                <i className="uil uil-book nav__icon"></i> Archive
+                <i className="uil uil-book nav__icon"></i> Home
+              </a>
+            </li>
+            <li className="nav__item">
+              <a href="#home" className="nav__link ">
+                <i className="uil uil-book nav__icon"></i> Archives
+              </a>
+            </li>
+            <li className="nav__item">
+              <a href="#home" className="nav__link ">
+                <i className="uil uil-book nav__icon"></i> Photos
               </a>
             </li>
             {/* <li className="nav__item">
