@@ -2,15 +2,7 @@ import React, { use, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import "../index.css"
 import "../css/List.css"
-import { blogPosts as fallbackPosts } from "../data/blogData"
-
-interface BlogPost {
-  id: number
-  title: string
-  summary: string
-  countryEmoji: string
-  path: string
-}
+import { BlogPost, blogPosts as fallbackPosts } from "../data/blogData"
 
 const List: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
