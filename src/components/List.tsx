@@ -10,9 +10,9 @@ const List: React.FC = () => {
         <h2>Archive</h2>
         <div className="blog-preview">
           <Link to="/blog-post-path">
-            <h2>title</h2>
-            <p>summary</p>
-            <p>🇵🇭</p>
+            <h2>Taiwan, 2019</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>&#x1F1F9;&#x1F1FC;</p>
           </Link>
         </div>
       </div>
