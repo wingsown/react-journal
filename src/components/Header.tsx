@@ -5,7 +5,7 @@ const Header: React.FC = () => {
   return (
     <header className="header" id="header">
       <nav className="nav container">
-        <a href="#" className="nav__logo">
+        <a href="/" className="nav__logo">
           {/* <img
             src="assets/img/Icon_4.png"
             alt=""
