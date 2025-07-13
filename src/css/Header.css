@@ -1,0 +1,34 @@
+/*==================== NAV ====================*/
+.nav {
+  max-width: 968px;
+  height: var(--header-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav__logo,
+.nav__toggle {
+  color: var(--first-color-alt);
+  font-weight: var(--font-medium);
+}
+
+/* .nav__logo:hover {
+    color: var(--first-color-alt);
+} */
+
+.nav__logo-img {
+  width: 55px;
+  height: 55px;
+  margin-top: 6.5px;
+}
+
+.nav__toggle {
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--first-color-copy);
+}
+
+/* .nav__toggle:hover {
+    color: var(--first-color-alt);
+} */
