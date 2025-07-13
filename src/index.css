@@ -233,10 +233,4 @@ button {
   .footer__container {
     padding: 0;
   }
-
-  .container {
-    max-width: 1440px; /* 1200, 1280 other options*/
-    margin-left: auto;
-    margin-right: auto;
-  }
 }
