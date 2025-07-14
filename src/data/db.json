@@ -4,61 +4,71 @@
       "id": 1,
       "title": "📍Ilocos, 2024",
       "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "countryEmoji": "🇵🇭"
+      "countryEmoji": "🇵🇭",
+      "year": 2024
     },
     {
       "id": 2,
       "title": "⛰️Mt. Apo, 2023",
       "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "countryEmoji": "🇵🇭"
+      "countryEmoji": "🇵🇭",
+      "year": 2023
     },
     {
       "id": 3,
       "title": "📍Taichung, 2023",
       "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "countryEmoji": "🇹🇼"
+      "countryEmoji": "🇹🇼",
+      "year": 2023
     },
     {
       "id": 4,
       "title": "📍Bangkok, 2019",
       "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "countryEmoji": "🇹🇭"
+      "countryEmoji": "🇹🇭",
+      "year": 2019
     },
     {
       "id": 5,
       "title": "📍Taipei, 2019",
       "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "countryEmoji": "🇹🇼"
+      "countryEmoji": "🇹🇼",
+      "year": 2019
     },
     {
       "id": 6,
       "title": "📍Hong Kong, 2018",
       "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "countryEmoji": "🇭🇰"
+      "countryEmoji": "🇭🇰",
+      "year": 2018
     },
     {
       "id": 7,
       "title": "📍Singapore, 2018",
       "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "countryEmoji": "🇸🇬"
+      "countryEmoji": "🇸🇬",
+      "year": 2018
     },
     {
       "id": 8,
       "title": "📍Tokyo, 2017",
       "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "countryEmoji": "🇯🇵"
+      "countryEmoji": "🇯🇵",
+      "year": 2017
     },
     {
       "id": 9,
       "title": "📍Kyoto, 2017",
       "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "countryEmoji": "🇯🇵"
+      "countryEmoji": "🇯🇵",
+      "year": 2017
     },
     {
       "id": 10,
       "title": "📍Seoul, 2016",
       "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      "countryEmoji": "🇰🇷"
+      "countryEmoji": "🇰🇷",
+      "year": 2016
     }
   ]
 }

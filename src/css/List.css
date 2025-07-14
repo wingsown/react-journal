@@ -22,6 +22,14 @@
   color: #262626;
 }
 
+.blog-meta {
+  display: flex;
+  justify-content: space-between;
+}
+.blog-meta p {
+  font-size: 12px;
+}
+
 .pagination {
   display: flex;
   gap: 8px;

@@ -60,7 +60,10 @@ const List: React.FC = () => {
               <Link to={`blogs/${blog.id}`}>
                 <h2>{blog.title}</h2>
                 <p>{blog.summary}</p>
-                <p>{blog.countryEmoji}</p>
+                <div className="blog-meta">
+                  <p>{blog.countryEmoji}</p>
+                  <p>{blog.year}</p>
+                </div>
               </Link>
             </div>
           ))}
