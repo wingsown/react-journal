@@ -36,4 +36,34 @@ export const blogPosts: BlogPost[] = [
     summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     countryEmoji: "🇹🇼",
   },
+  {
+    id: 6,
+    title: "📍Hong Kong, 2018",
+    summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    countryEmoji: "🇭🇰",
+  },
+  {
+    id: 7,
+    title: "📍Singapore, 2018",
+    summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    countryEmoji: "🇸🇬",
+  },
+  {
+    id: 8,
+    title: "📍Tokyo, 2017",
+    summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    countryEmoji: "🇯🇵",
+  },
+  {
+    id: 9,
+    title: "📍Kyoto, 2017",
+    summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    countryEmoji: "🇯🇵",
+  },
+  {
+    id: 10,
+    title: "📍Seoul, 2016",
+    summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    countryEmoji: "🇰🇷",
+  },
 ]
