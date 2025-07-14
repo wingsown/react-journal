@@ -75,9 +75,7 @@ const List: React.FC = () => {
               key={i + 1}
               className={currentPage === i + 1 ? "active" : ""}
               onClick={() => handlePageChange(i + 1)}
-            >
-              {i + 1}
-            </button>
+            ></button>
           ))}
         </div>
       </div>

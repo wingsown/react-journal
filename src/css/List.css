@@ -35,24 +35,32 @@
   gap: 8px;
   justify-content: center;
   margin-top: 20px;
+
+  /* Enable horizontal swipe on smaller screens */
+  overflow-x: auto;
+  padding: 10px 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
 }
 
 .pagination button {
-  padding: 6px 12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ccc;
   border: none;
-  background-color: #ddd;
-  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  scroll-snap-align: start;
+  transition: background-color 0.3s ease;
+  flex-shrink: 0; /* Keep consistent size when scrolling */
 }
 
 .pagination button:hover {
-  background-color: #bbb;
+  background-color: #999;
 }
 
 .pagination button.active {
   background-color: #333;
-  color: #fff;
 }
 
 .blog-fade {
