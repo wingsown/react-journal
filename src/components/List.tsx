@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import "../index.css"
 import "../css/List.css"
-import { BlogPost, blogPosts as fallbackPosts } from "../data/blogData"
+import { BlogPost } from "../data/blogData"
+
+import { collection, getDocs } from "firebase/firestore"
+import { db } from "../firebase"
 
 const List: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
@@ -22,19 +25,40 @@ const List: React.FC = () => {
     }, 200)
   }
 
+  // MOCK DATA
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await fetch("http://localhost:3000/blogs")
+  //       if (!res.ok) throw new Error("Server offline")
+  //       const data = await res.json()
+  //       setBlogPosts(data)
+  //     } catch (err) {
+  //       console.warn("Falling back to static data", err)
+  //       setBlogPosts(fallbackPosts)
+  //     }
+  //   }
+  //   fetchData()
+  // }, [])
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/blogs")
-        if (!res.ok) throw new Error("Server offline")
-        const data = await res.json()
-        setBlogPosts(data)
-      } catch (err) {
-        console.warn("Falling back to static data", err)
-        setBlogPosts(fallbackPosts)
-      }
+    const fetchBlogs = async () => {
+      const snapshot = await getDocs(collection(db, "blogs"))
+      const blogData = snapshot.docs.map((doc) => {
+        const data = doc.data()
+        return {
+          id: doc.id, // ✅ use doc.id here
+          title: data.title,
+          summary: data.summary,
+          content: data.content,
+          countryEmoji: data.countryEmoji,
+          year: data.year,
+        }
+      }) as BlogPost[]
+      setBlogPosts(blogData)
     }
-    fetchData()
+
+    fetchBlogs()
   }, [])
 
   useEffect(() => {
@@ -69,36 +93,38 @@ const List: React.FC = () => {
           ))}
         </div>
 
-        <div className="pagination-wrapper">
-          <button
-            className="arrow"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            aria-label="Previous page"
-          >
-            ‹
-          </button>
+        {blogPosts.length > entriesPerPage && (
+          <div className="pagination-wrapper">
+            <button
+              className="arrow"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              aria-label="Previous page"
+            >
+              ‹
+            </button>
 
-          <div className="pagination">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                className={currentPage === i + 1 ? "active" : ""}
-                onClick={() => handlePageChange(i + 1)}
-                aria-label={`Go to page ${i + 1}`}
-              />
-            ))}
+            <div className="pagination">
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i + 1}
+                  className={currentPage === i + 1 ? "active" : ""}
+                  onClick={() => handlePageChange(i + 1)}
+                  aria-label={`Go to page ${i + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              className="arrow"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              aria-label="Next page"
+            >
+              ›
+            </button>
           </div>
-
-          <button
-            className="arrow"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            aria-label="Next page"
-          >
-            ›
-          </button>
-        </div>
+        )}
       </div>
     </section>
   )
