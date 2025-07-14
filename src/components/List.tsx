@@ -28,7 +28,7 @@ const List: React.FC = () => {
         <h2>Archive</h2>
         {blogPosts.map((blog) => (
           <div className="blog-preview" key={blog.id}>
-            <Link to={blog.path}>
+            <Link to={`blogs/${blog.id}`}>
               <h2>{blog.title}</h2>
               <p>{blog.summary}</p>
               <p>{blog.countryEmoji}</p>
