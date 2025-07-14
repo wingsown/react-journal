@@ -1,0 +1,11 @@
+/*==================== JOURNAL ENTRIES ====================*/
+
+.journal-entry h2 {
+  font-size: 20px;
+  color: #262626;
+  margin-bottom: 10px;
+}
+
+.journal-entry div {
+  margin: 20px 0;
+}
