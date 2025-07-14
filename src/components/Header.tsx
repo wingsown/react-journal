@@ -1,7 +1,14 @@
-import React from "react"
+import React, { useEffect } from "react"
 import "../css/Header.css"
+import "../index.css"
+import { setupMobileNav } from "../utils/navBar"
 
 const Header: React.FC = () => {
+  useEffect(() => {
+    const cleanup = setupMobileNav()
+    return cleanup
+  }, [])
+
   return (
     <header className="header" id="header">
       <nav className="nav container">

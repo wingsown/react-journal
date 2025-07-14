@@ -67,7 +67,7 @@
 @keyframes slideFadeIn {
   from {
     opacity: 0;
-    transform: translateX(40px);
+    transform: translateX(10px);
   }
   to {
     opacity: 1;
@@ -82,6 +82,6 @@
   }
   to {
     opacity: 0;
-    transform: translateX(-40px);
+    transform: translateX(-10px);
   }
 }
