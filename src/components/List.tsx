@@ -69,14 +69,35 @@ const List: React.FC = () => {
           ))}
         </div>
 
-        <div className="pagination">
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              className={currentPage === i + 1 ? "active" : ""}
-              onClick={() => handlePageChange(i + 1)}
-            ></button>
-          ))}
+        <div className="pagination-wrapper">
+          <button
+            className="arrow"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            aria-label="Previous page"
+          >
+            ‹
+          </button>
+
+          <div className="pagination">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                className={currentPage === i + 1 ? "active" : ""}
+                onClick={() => handlePageChange(i + 1)}
+                aria-label={`Go to page ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          <button
+            className="arrow"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            aria-label="Next page"
+          >
+            ›
+          </button>
         </div>
       </div>
     </section>
