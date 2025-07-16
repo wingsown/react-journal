@@ -16,8 +16,7 @@ const Home: React.FC = () => {
       try {
         const blogQuery = query(
           collection(db, "blogs"),
-          orderBy("date", "desc"),
-          limit(5) // ✅ only get latest 5 posts
+          orderBy("date", "desc")
         )
         const snapshot = await getDocs(blogQuery)
         const blogData = snapshot.docs.map((doc) => {
