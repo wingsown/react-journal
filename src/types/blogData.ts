@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore"
+
 export interface BlogPost {
   id: string
   title: string
@@ -5,4 +7,6 @@ export interface BlogPost {
   content: string
   countryEmoji: string
   year: number
+  date: Timestamp
+  slug: string
 }

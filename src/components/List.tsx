@@ -4,7 +4,7 @@ import "../index.css"
 import "../assets/css/List.css"
 import { BlogPost } from "../types/blogData"
 
-import { collection, getDocs } from "firebase/firestore"
+import { collection, getDocs, query, orderBy } from "firebase/firestore"
 import { db } from "../firebase"
 
 const List: React.FC = () => {
@@ -45,7 +45,11 @@ const List: React.FC = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const snapshot = await getDocs(collection(db, "blogs"))
+        const blogQuery = query(
+          collection(db, "blogs"),
+          orderBy("date", "desc")
+        )
+        const snapshot = await getDocs(blogQuery)
         const blogData = snapshot.docs.map((doc) => {
           const data = doc.data()
           return {
@@ -81,7 +85,7 @@ const List: React.FC = () => {
   return (
     <section className="section">
       <div className="blog-list container">
-        <h2>Archive</h2>
+        <h2>Archives</h2>
 
         <div className={`blog-entries ${fadeClass}`} key={currentPage}>
           {currentPosts.map((blog) => (
