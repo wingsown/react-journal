@@ -2,6 +2,8 @@ import { useParams, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { BlogPost } from "../types/blogData"
 import "../assets/css/Journal.css"
+import Lightbox from "yet-another-react-lightbox"
+import "yet-another-react-lightbox/styles.css"
 
 import {
   getJournalImages,
@@ -16,6 +18,8 @@ const Journal = () => {
   const [post, setPost] = useState<BlogPost | null>(null)
   const navigate = useNavigate()
   const [error, setError] = useState(null)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(0)
 
   // MOCK DATA
   // useEffect(() => {
@@ -78,9 +82,10 @@ const Journal = () => {
   }
 
   if (!post) return <div>Loading...</div>
+
   const paragraphs = post.content.replace(/\\n/g, "\n").split("\n\n")
   const folder = `${post.year}/${post.slug}`
-  const maxImages = 10
+  const maxImages = 15
 
   const fallbackFolder = `${post.year}/${post.slug
     .toLowerCase()
@@ -97,27 +102,72 @@ const Journal = () => {
     <div className="section">
       <article className="journal-entry">
         <h2>{post.title}</h2>
+
         <div className="journal-content">
           {paragraphs.map((para, idx) => {
             const imageIndex = inlinePositions.indexOf(idx)
             return (
               <div key={generateHash(para)}>
                 <p>{para}</p>
+
                 {imageIndex !== -1 && images[imageIndex] && (
                   <img
                     src={images[imageIndex]}
                     alt={`Inline image after paragraph ${idx + 1}`}
                     className="journal-image"
+                    loading="lazy"
+                    onClick={() => {
+                      setLightboxIndex(imageIndex)
+                      setLightboxOpen(true)
+                    }}
+                    style={{ cursor: "pointer" }}
                   />
                 )}
               </div>
             )
           })}
         </div>
+
+        {/* 🖼 Masonry-style gallery */}
+        {images.length > inlinePositions.length && (
+          <div className="masonry-gallery">
+            {images.slice(inlinePositions.length).map((img, i) => {
+              const realIndex = i + inlinePositions.length
+              return (
+                <img
+                  key={`gallery-${i}`}
+                  src={img}
+                  alt={`Gallery image ${i + 1}`}
+                  className="masonry-photo"
+                  loading="lazy"
+                  onClick={() => {
+                    setLightboxIndex(realIndex)
+                    setLightboxOpen(true)
+                  }}
+                  style={{ cursor: "pointer" }}
+                />
+              )
+            })}
+          </div>
+        )}
+
         <button onClick={() => navigate(-1)} className="back-button">
           ← Back
         </button>
       </article>
+
+      {/* Lightbox preview */}
+      {lightboxOpen && (
+        <Lightbox
+          open={lightboxOpen}
+          close={() => setLightboxOpen(false)}
+          slides={images.map((src) => ({ src }))}
+          index={lightboxIndex}
+          on={{
+            view: ({ index }) => setLightboxIndex(index),
+          }}
+        />
+      )}
     </div>
   )
 }
