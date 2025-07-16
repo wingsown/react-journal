@@ -26,7 +26,7 @@ const Header: React.FC = () => {
           <ul className="nav__list grid">
             <li className="nav__item">
               <a href="#home" className="nav__link active-link">
-                <i className="uil uil-book nav__icon"></i> Home
+                <i className="uil uil-edit nav__icon"></i> Home
               </a>
             </li>
             <li className="nav__item">
@@ -36,7 +36,7 @@ const Header: React.FC = () => {
             </li>
             <li className="nav__item">
               <a href="#home" className="nav__link ">
-                <i className="uil uil-book nav__icon"></i> Photos
+                <i className="uil uil-camera nav__icon"></i> Photos
               </a>
             </li>
             {/* <li className="nav__item">
