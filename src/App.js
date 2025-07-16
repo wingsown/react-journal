@@ -5,6 +5,7 @@ import Footer from "./components/Footer"
 import List from "./components/List"
 import Home from "./components/Home"
 import Journal from "./components/Journal"
+import Photos from "./components/Photos"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/archives" element={<List />} />
             <Route path="/blogs/:id" element={<Journal />} />
+            <Route path="/photos" element={<Photos />} />
           </Routes>
         </div>
         <Footer />
