@@ -21,24 +21,6 @@ const Journal = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
 
-  // MOCK DATA
-  // useEffect(() => {
-  //   const fetchBlog = async () => {
-  //     try {
-  //       const res = await fetch(`http://localhost:3000/blogs/${id}`)
-  //       if (!res.ok) throw new Error("Failed to fetch")
-  //       const data = await res.json()
-  //       setPost(data)
-  //     } catch (err) {
-  //       console.warn("Using fallback post", err)
-  //       const fallback = fallbackPosts.find((p) => String(p.id) === id)
-  //       setPost(fallback || null)
-  //     }
-  //   }
-
-  //   fetchBlog()
-  // }, [id])
-
   useEffect(() => {
     const fetchBlog = async () => {
       if (!id) return
@@ -76,7 +58,7 @@ const Journal = () => {
     let hash = 0
     for (let i = 0; i < str.length; i++) {
       hash = (hash << 5) - hash + str.charCodeAt(i)
-      hash |= 0 // Convert to 32bit integer
+      hash |= 0
     }
     return hash.toString()
   }
@@ -156,7 +138,6 @@ const Journal = () => {
         </button>
       </article>
 
-      {/* Lightbox preview */}
       {lightboxOpen && (
         <Lightbox
           open={lightboxOpen}
