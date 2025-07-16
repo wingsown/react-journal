@@ -7,6 +7,10 @@ import Home from "./components/Home"
 import Journal from "./components/Journal"
 import Photos from "./components/Photos"
 
+import { preloader } from "./utils/preloader"
+
+preloader()
+
 function App() {
   return (
     <Router>
