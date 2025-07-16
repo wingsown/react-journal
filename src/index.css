@@ -175,16 +175,25 @@ button {
   background-color: var(--body-color);
 }
 
-/* #preloader {
-  background: #fff url("../img/Icon_4.png") no-repeat center center;
+#preloader {
+  background: #fff url("assets/icons/Icon_4.png") no-repeat center center;
   background-size: 50%;
   height: 100vh;
   width: 100%;
   position: fixed;
   z-index: 999999;
-  display: visible;
-  transition: display 1s;
-} */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#preloader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
 
 /*==================== MEDIA QUERIES ====================*/
 @media screen and (min-width: 320px) {
@@ -195,14 +204,14 @@ button {
 }
 
 @media screen and (min-width: 790px) {
-  /* #preloader {
-      background: #fff url("../img/Icon_4.png") no-repeat center center;
-      background-size: 12%;
-      height: 100vh;
-      width: 100%;
-      position: fixed;
-      z-index: 999999;
-    } */
+  #preloader {
+    background: #fff url("assets/icons/Icon_4.png") no-repeat center center;
+    background-size: 12%;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    z-index: 999999;
+  }
 
   .container {
     margin-left: auto;

@@ -10,6 +10,8 @@ import {
   getInlineImagePositions,
 } from "../utils/getJournalImages"
 
+import icon4 from "../assets/icons/Icon_4.png"
+
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../firebase"
 
@@ -63,7 +65,15 @@ const Journal = () => {
     return hash.toString()
   }
 
-  if (!post) return <div>Loading...</div>
+  if (!post && !error) {
+    return (
+      <div id="journal-loader" className="section">
+        <div className="preloader-content">
+          <img src={icon4} className="loading-icon" />
+        </div>
+      </div>
+    )
+  }
 
   const paragraphs = post.content.replace(/\\n/g, "\n").split("\n\n")
   const folder = `${post.year}/${post.slug}`
