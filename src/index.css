@@ -175,7 +175,7 @@ button {
   background-color: var(--body-color);
 }
 
-#preloader {
+/* #preloader {
   background: #fff url("assets/icons/Icon_4.png") no-repeat center center;
   background-size: 50%;
   height: 100vh;
@@ -193,7 +193,7 @@ button {
 #preloader.fade-out {
   opacity: 0;
   visibility: hidden;
-}
+} */
 
 /*==================== MEDIA QUERIES ====================*/
 @media screen and (min-width: 320px) {
@@ -204,14 +204,14 @@ button {
 }
 
 @media screen and (min-width: 790px) {
-  #preloader {
+  /* #preloader {
     background: #fff url("assets/icons/Icon_4.png") no-repeat center center;
     background-size: 12%;
     height: 100vh;
     width: 100%;
     position: fixed;
     z-index: 999999;
-  }
+  } */
 
   .container {
     margin-left: auto;
