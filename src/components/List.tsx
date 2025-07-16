@@ -15,13 +15,14 @@ const List: React.FC = () => {
   const pageParam = parseInt(searchParams.get("page") || "1", 10)
   const [currentPage, setCurrentPage] = useState(pageParam)
   const [fadeClass, setFadeClass] = useState("fade-in")
+  const [error, setError] = useState<string | null>(null)
 
   const handlePageChange = (page: number) => {
-    setFadeClass("fade-out") // Start fade-out
+    setFadeClass("fade-out")
     setTimeout(() => {
       setCurrentPage(page)
       setSearchParams({ page: page.toString() })
-      setFadeClass("fade-in") // Then fade-in
+      setFadeClass("fade-in")
     }, 200)
   }
 
@@ -43,21 +44,25 @@ const List: React.FC = () => {
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      const snapshot = await getDocs(collection(db, "blogs"))
-      const blogData = snapshot.docs.map((doc) => {
-        const data = doc.data()
-        return {
-          id: doc.id, // ✅ use doc.id here
-          title: data.title,
-          summary: data.summary,
-          content: data.content,
-          countryEmoji: data.countryEmoji,
-          year: data.year,
-        }
-      }) as BlogPost[]
-      setBlogPosts(blogData)
+      try {
+        const snapshot = await getDocs(collection(db, "blogs"))
+        const blogData = snapshot.docs.map((doc) => {
+          const data = doc.data()
+          return {
+            id: doc.id,
+            title: data.title,
+            summary: data.summary,
+            content: data.content,
+            countryEmoji: data.countryEmoji,
+            year: data.year,
+          }
+        }) as BlogPost[]
+        setBlogPosts(blogData)
+      } catch (error) {
+        console.error("Error fetching blog posts:", error)
+        setError("Failed fetching blog posts 😢")
+      }
     }
-
     fetchBlogs()
   }, [])
 
