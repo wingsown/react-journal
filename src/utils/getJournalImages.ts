@@ -11,9 +11,13 @@ export const getJournalImages = (folder: string, count: number): string[] => {
   return images
 }
 
-export const getInlineImagePositions = (count: number): number[] => {
-  if (count <= 3) return [0]
-  if (count <= 5) return [0, 2]
-  if (count <= 7) return [0, 3, 5]
-  return [1, 4, 7]
+export const getInlineImagePositions = (paragraphCount: number): number[] => {
+  if (paragraphCount < 3) return [0] // fallback: just add one image
+
+  const spacing = paragraphCount / 4 // divide into 4 parts, insert at 1/4, 2/4, 3/4
+  return [
+    Math.floor(spacing), // 25%
+    Math.floor(spacing * 2), // 50%
+    Math.floor(spacing * 3), // 75%
+  ]
 }
