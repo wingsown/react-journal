@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
 import List from "./components/List"
+import Home from "./components/Home"
 import Journal from "./components/Journal"
+import Photos from "./components/Photos"
 
 function App() {
   return (
@@ -12,8 +14,10 @@ function App() {
         <Header />
         <div className="main container">
           <Routes>
-            <Route path="/" element={<List />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/archives" element={<List />} />
             <Route path="/blogs/:id" element={<Journal />} />
+            <Route path="/photos" element={<Photos />} />
           </Routes>
         </div>
         <Footer />

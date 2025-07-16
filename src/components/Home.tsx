@@ -7,7 +7,7 @@ import { BlogPost } from "../types/blogData"
 import { collection, getDocs } from "firebase/firestore"
 import { db } from "../firebase"
 
-const List: React.FC = () => {
+const Home: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -15,14 +15,13 @@ const List: React.FC = () => {
   const pageParam = parseInt(searchParams.get("page") || "1", 10)
   const [currentPage, setCurrentPage] = useState(pageParam)
   const [fadeClass, setFadeClass] = useState("fade-in")
-  const [error, setError] = useState<string | null>(null)
 
   const handlePageChange = (page: number) => {
-    setFadeClass("fade-out")
+    setFadeClass("fade-out") // Start fade-out
     setTimeout(() => {
       setCurrentPage(page)
       setSearchParams({ page: page.toString() })
-      setFadeClass("fade-in")
+      setFadeClass("fade-in") // Then fade-in
     }, 200)
   }
 
@@ -44,25 +43,21 @@ const List: React.FC = () => {
 
   useEffect(() => {
     const fetchBlogs = async () => {
-      try {
-        const snapshot = await getDocs(collection(db, "blogs"))
-        const blogData = snapshot.docs.map((doc) => {
-          const data = doc.data()
-          return {
-            id: doc.id,
-            title: data.title,
-            summary: data.summary,
-            content: data.content,
-            countryEmoji: data.countryEmoji,
-            year: data.year,
-          }
-        }) as BlogPost[]
-        setBlogPosts(blogData)
-      } catch (error) {
-        console.error("Error fetching blog posts:", error)
-        setError("Failed fetching blog posts 😢")
-      }
+      const snapshot = await getDocs(collection(db, "blogs"))
+      const blogData = snapshot.docs.map((doc) => {
+        const data = doc.data()
+        return {
+          id: doc.id, // ✅ use doc.id here
+          title: data.title,
+          summary: data.summary,
+          content: data.content,
+          countryEmoji: data.countryEmoji,
+          year: data.year,
+        }
+      }) as BlogPost[]
+      setBlogPosts(blogData)
     }
+
     fetchBlogs()
   }, [])
 
@@ -81,7 +76,7 @@ const List: React.FC = () => {
   return (
     <section className="section">
       <div className="blog-list container">
-        <h2>Archive</h2>
+        <h2>Latest</h2>
 
         <div className={`blog-entries ${fadeClass}`} key={currentPage}>
           {currentPosts.map((blog) => (
@@ -135,4 +130,4 @@ const List: React.FC = () => {
   )
 }
 
-export default List
+export default Home

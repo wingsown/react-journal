@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { BlogPost, blogPosts as fallbackPosts } from "../data/blogData"
-import "../css/Journal.css"
+import { BlogPost } from "../types/blogData"
+import "../assets/css/Journal.css"
 
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../firebase"
@@ -10,6 +10,7 @@ const Journal = () => {
   const { id } = useParams()
   const [post, setPost] = useState<BlogPost | null>(null)
   const navigate = useNavigate()
+  const [error, setError] = useState(null)
 
   // MOCK DATA
   // useEffect(() => {
@@ -52,24 +53,37 @@ const Journal = () => {
         }
       } catch (error) {
         console.error("Error fetching blog post:", error)
-        const fallback = fallbackPosts.find((p) => String(p.id) === id)
-        setPost(fallback || null)
+        setPost(null)
+        setError("Failed fetching post 😢")
       }
     }
 
     fetchBlog()
   }, [id])
 
+  const generateHash = (str: string): string => {
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i)
+      hash |= 0 // Convert to 32bit integer
+    }
+    return hash.toString()
+  }
+
   if (!post) return <div>Loading...</div>
   return (
     <div className="section">
       <article className="journal-entry">
         <h2>{post.title}</h2>
-        <div>{post.content}</div>
+        <div className="journal-content">
+          {post.content.split("\n\n").map((para) => (
+            <p key={generateHash(para)}>{para}</p>
+          ))}
+        </div>
+        <button onClick={() => navigate(-1)} className="back-button">
+          ← Back
+        </button>
       </article>
-      <button onClick={() => navigate(-1)} className="back-button">
-        ← Back
-      </button>
     </div>
   )
 }

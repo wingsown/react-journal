@@ -1,5 +1,9 @@
 /*==================== JOURNAL ENTRIES ====================*/
 
+.journal-entry {
+  padding: 0 1rem;
+}
+
 .journal-entry h2 {
   font-size: 20px;
   color: #262626;
@@ -8,6 +12,11 @@
 
 .journal-entry div {
   margin: 20px 0;
+}
+
+.journal-content p {
+  margin-bottom: 1.2rem;
+  line-height: 1.6;
 }
 
 .back-button {

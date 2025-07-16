@@ -1,0 +1,20 @@
+.photos__section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh; /* or 100vh if you want full page height */
+}
+
+.photos__section h2 {
+  font-size: 20px;
+  color: #262626;
+  margin-bottom: 8px;
+}
+
+.under-construction {
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #666;
+  text-align: center;
+}

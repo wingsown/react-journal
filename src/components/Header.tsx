@@ -1,7 +1,8 @@
 import React, { useEffect } from "react"
-import "../css/Header.css"
+import "../assets/css/Header.css"
 import "../index.css"
 import { setupMobileNav } from "../utils/navBar"
+import { NavLink } from "react-router-dom"
 
 const Header: React.FC = () => {
   useEffect(() => {
@@ -25,19 +26,34 @@ const Header: React.FC = () => {
         <div className="nav__menu" id="nav-menu">
           <ul className="nav__list grid">
             <li className="nav__item">
-              <a href="#home" className="nav__link active-link">
-                <i className="uil uil-book nav__icon"></i> Home
-              </a>
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  isActive ? "nav__link active-link" : "nav__link"
+                }
+              >
+                <i className="uil uil-edit nav__icon"></i> Home
+              </NavLink>
             </li>
             <li className="nav__item">
-              <a href="#home" className="nav__link ">
+              <NavLink
+                to="/archives"
+                className={({ isActive }) =>
+                  isActive ? "nav__link active-link" : "nav__link"
+                }
+              >
                 <i className="uil uil-book nav__icon"></i> Archives
-              </a>
+              </NavLink>
             </li>
             <li className="nav__item">
-              <a href="#home" className="nav__link ">
-                <i className="uil uil-book nav__icon"></i> Photos
-              </a>
+              <NavLink
+                to="/photos"
+                className={({ isActive }) =>
+                  isActive ? "nav__link active-link" : "nav__link"
+                }
+              >
+                <i className="uil uil-camera nav__icon"></i> Photos
+              </NavLink>
             </li>
             {/* <li className="nav__item">
               <a href="#contact" className="nav__link">
