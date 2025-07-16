@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import "../index.css"
 import "../assets/css/List.css"
 import { BlogPost } from "../types/blogData"
+import icon4 from "../assets/icons/Icon_4.png"
 
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore"
 import { db } from "../firebase"
@@ -10,6 +11,7 @@ import { db } from "../firebase"
 const Home: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
   const [fadeClass, setFadeClass] = useState("fade-in")
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -34,11 +36,23 @@ const Home: React.FC = () => {
         setBlogPosts(blogData)
       } catch (error) {
         console.error("Error fetching blog posts:", error)
+      } finally {
+        setLoading(false)
       }
     }
 
     fetchBlogs()
   }, [])
+
+  if (loading) {
+    return (
+      <section className="section" id="home-loader">
+        <div className="preloader-content">
+          <img src={icon4} className="loading-icon" alt="Loading..." />
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="section">
