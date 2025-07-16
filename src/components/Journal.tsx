@@ -3,6 +3,10 @@ import { useEffect, useState } from "react"
 import { BlogPost } from "../types/blogData"
 import "../assets/css/Journal.css"
 
+import { getJournalImages } from "../utils/getJournalImages"
+
+import testImg from "../assets/photos/2018/Mabini/test_1.png"
+
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../firebase"
 
@@ -46,6 +50,8 @@ const Journal = () => {
             content: data.content,
             countryEmoji: data.countryEmoji,
             year: data.year,
+            date: data.date,
+            slug: data.slug,
           })
         } else {
           console.warn("No such blog post in Firestore")
@@ -71,13 +77,33 @@ const Journal = () => {
   }
 
   if (!post) return <div>Loading...</div>
+  const paragraphs = post.content.replace(/\\n/g, "\n").split("\n\n")
+  // Build the folder dynamically using Firestore values
+  const folder = `${post.year}/${post.slug}`
+
+  // You can also fallback to a sanitized title:
+  const fallbackFolder = `${post.year}/${post.slug
+    .toLowerCase()
+    .replace(/\s+/g, "-")}`
+
+  const images = getJournalImages(post.slug ? folder : fallbackFolder, 3)
+
   return (
     <div className="section">
       <article className="journal-entry">
         <h2>{post.title}</h2>
         <div className="journal-content">
-          {post.content.split("\n\n").map((para) => (
-            <p key={generateHash(para)}>{para}</p>
+          {paragraphs.map((para, idx) => (
+            <div key={generateHash(para)}>
+              <p>{para}</p>
+              {images[idx] && (
+                <img
+                  src={images[idx]}
+                  alt={`Photo ${idx + 1}`}
+                  className="journal-image"
+                />
+              )}
+            </div>
           ))}
         </div>
         <button onClick={() => navigate(-1)} className="back-button">

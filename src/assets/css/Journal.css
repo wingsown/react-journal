@@ -30,3 +30,11 @@
 .back-button:hover {
   text-decoration: underline;
 }
+
+.journal-image {
+  width: 100%;
+  max-width: 100%;
+  margin: 1rem 0;
+  border-radius: 8px;
+  display: block;
+}
