@@ -1,5 +1,5 @@
 import React, { useEffect } from "react"
-import "../css/Header.css"
+import "../assets/css/Header.css"
 import "../index.css"
 import { setupMobileNav } from "../utils/navBar"
 import { NavLink } from "react-router-dom"

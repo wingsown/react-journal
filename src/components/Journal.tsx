@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { BlogPost } from "../types/blogData"
-import "../css/Journal.css"
+import "../assets/css/Journal.css"
 
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../firebase"

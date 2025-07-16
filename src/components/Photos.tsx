@@ -1,4 +1,4 @@
-import "../css/Photos.css"
+import "../assets/css/Photos.css"
 const Photos = () => {
   return (
     <section className="section">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import "../index.css"
-import "../css/List.css"
+import "../assets/css/List.css"
 import { BlogPost } from "../types/blogData"
 
 import { collection, getDocs } from "firebase/firestore"
