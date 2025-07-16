@@ -3,9 +3,10 @@ import { useEffect, useState } from "react"
 import { BlogPost } from "../types/blogData"
 import "../assets/css/Journal.css"
 
-import { getJournalImages } from "../utils/getJournalImages"
-
-import testImg from "../assets/photos/2018/Mabini/test_1.png"
+import {
+  getJournalImages,
+  getInlineImagePositions,
+} from "../utils/getJournalImages"
 
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../firebase"
@@ -78,33 +79,40 @@ const Journal = () => {
 
   if (!post) return <div>Loading...</div>
   const paragraphs = post.content.replace(/\\n/g, "\n").split("\n\n")
-  // Build the folder dynamically using Firestore values
   const folder = `${post.year}/${post.slug}`
+  const maxImages = 10
 
-  // You can also fallback to a sanitized title:
   const fallbackFolder = `${post.year}/${post.slug
     .toLowerCase()
     .replace(/\s+/g, "-")}`
 
-  const images = getJournalImages(post.slug ? folder : fallbackFolder, 3)
+  const images = getJournalImages(
+    post.slug ? folder : fallbackFolder,
+    maxImages
+  )
+
+  const inlinePositions = getInlineImagePositions(paragraphs.length)
 
   return (
     <div className="section">
       <article className="journal-entry">
         <h2>{post.title}</h2>
         <div className="journal-content">
-          {paragraphs.map((para, idx) => (
-            <div key={generateHash(para)}>
-              <p>{para}</p>
-              {images[idx] && (
-                <img
-                  src={images[idx]}
-                  alt={`Photo ${idx + 1}`}
-                  className="journal-image"
-                />
-              )}
-            </div>
-          ))}
+          {paragraphs.map((para, idx) => {
+            const imageIndex = inlinePositions.indexOf(idx)
+            return (
+              <div key={generateHash(para)}>
+                <p>{para}</p>
+                {imageIndex !== -1 && images[imageIndex] && (
+                  <img
+                    src={images[imageIndex]}
+                    alt={`Inline image after paragraph ${idx + 1}`}
+                    className="journal-image"
+                  />
+                )}
+              </div>
+            )
+          })}
         </div>
         <button onClick={() => navigate(-1)} className="back-button">
           ← Back
