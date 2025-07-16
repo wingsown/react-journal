@@ -61,16 +61,29 @@ const Journal = () => {
     fetchBlog()
   }, [id])
 
+  const generateHash = (str: string): string => {
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i)
+      hash |= 0 // Convert to 32bit integer
+    }
+    return hash.toString()
+  }
+
   if (!post) return <div>Loading...</div>
   return (
     <div className="section">
       <article className="journal-entry">
         <h2>{post.title}</h2>
-        <div>{post.content}</div>
+        <div className="journal-content">
+          {post.content.split("\n\n").map((para) => (
+            <p key={generateHash(para)}>{para}</p>
+          ))}
+        </div>
+        <button onClick={() => navigate(-1)} className="back-button">
+          ← Back
+        </button>
       </article>
-      <button onClick={() => navigate(-1)} className="back-button">
-        ← Back
-      </button>
     </div>
   )
 }
