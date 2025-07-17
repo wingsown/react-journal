@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, useSearchParams, useParams } from "react-router-dom"
 import "../index.css"
 import "../assets/css/List.css"
 import { BlogPost } from "../types/blogData"
@@ -8,7 +8,11 @@ import icon4 from "../assets/icons/Icon_4.png"
 import { collection, getDocs, query, orderBy } from "firebase/firestore"
 import { db } from "../firebase"
 
-const List: React.FC = () => {
+interface ListProps {
+  year?: number
+}
+
+const List: React.FC<ListProps> = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -18,6 +22,8 @@ const List: React.FC = () => {
   const [fadeClass, setFadeClass] = useState("fade-in")
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const { year } = useParams()
+  const filterYear = year ? parseInt(year, 10) : undefined
 
   const handlePageChange = (page: number) => {
     setFadeClass("fade-out")
@@ -63,7 +69,10 @@ const List: React.FC = () => {
             year: data.year,
           }
         }) as BlogPost[]
-        setBlogPosts(blogData)
+        const filtered = filterYear
+          ? blogData.filter((post) => post.year === filterYear)
+          : blogData
+        setBlogPosts(filtered)
       } catch (error) {
         console.error("Error fetching blog posts:", error)
         setError("Failed fetching blog posts 😢")
@@ -72,7 +81,7 @@ const List: React.FC = () => {
       }
     }
     fetchBlogs()
-  }, [])
+  }, [year])
 
   useEffect(() => {
     const pageFromURL = parseInt(searchParams.get("page") || "1", 10)

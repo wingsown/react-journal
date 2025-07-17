@@ -5,6 +5,7 @@ import { db } from "../firebase"
 import { BlogPost } from "../types/blogData"
 import { groupByYear } from "../utils/groupByYear"
 import "../assets/css/List.css"
+import { Link } from "react-router-dom"
 
 const Archives: React.FC = () => {
   const [groupedPosts, setGroupedPosts] = useState<Record<string, BlogPost[]>>(
@@ -34,7 +35,7 @@ const Archives: React.FC = () => {
         <h2>Archives</h2>
         <div className="folder-grid">
           {Object.entries(groupedPosts).map(([year, posts]) => (
-            <Folder key={year} year={year} posts={posts} />
+            <Folder year={year} posts={posts} />
           ))}
         </div>
       </div>

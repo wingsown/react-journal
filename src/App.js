@@ -16,11 +16,11 @@ function App() {
         <div className="main container">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/archives" element={<List />} />
+            <Route path="/archives" element={<Archives />} />{" "}
+            <Route path="/archives/:year" element={<List />} />{" "}
             <Route path="/archives/blogs/:id" element={<Journal />} />
             <Route path="/blogs/:id" element={<Journal />} />
             <Route path="/photos" element={<Photos />} />
-            <Route path="/test" element={<Archives />} />
           </Routes>
         </div>
         <Footer />
