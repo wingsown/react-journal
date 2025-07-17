@@ -95,66 +95,64 @@ const List: React.FC<ListProps> = () => {
   const currentPosts = blogPosts.slice(indexOfFirstPost, indexOfLastPost)
   const totalPages = Math.ceil(blogPosts.length / entriesPerPage)
 
-  if (loading) {
-    return (
-      <section className="section" id="home-loader">
-        <div className="preloader-content">
-          <img src={icon4} className="loading-icon" alt="Loading..." />
-        </div>
-      </section>
-    )
-  }
-
   return (
     <section className="section">
-      <div className="blog-list container">
+      <div className="container">
         <h2>Archives</h2>
 
-        <div className={`blog-entries ${fadeClass}`} key={currentPage}>
-          {currentPosts.map((blog) => (
-            <div className="blog-preview" key={blog.id}>
-              <Link to={`blogs/${blog.id}`}>
-                <h2>{blog.title}</h2>
-                <p>{blog.summary}</p>
-                <div className="blog-meta">
-                  <p>{blog.countryEmoji}</p>
-                  <p>{blog.year}</p>
+        {loading ? (
+          <div className="preloader-content">
+            <img src={icon4} className="loading-icon" alt="Loading..." />
+          </div>
+        ) : (
+          <div className="blog-list">
+            <div className={`blog-entries ${fadeClass}`} key={currentPage}>
+              {currentPosts.map((blog) => (
+                <div className="blog-preview" key={blog.id}>
+                  <Link to={`blogs/${blog.id}`}>
+                    <h2>{blog.title}</h2>
+                    <p>{blog.summary}</p>
+                    <div className="blog-meta">
+                      <p>{blog.countryEmoji}</p>
+                      <p>{blog.year}</p>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-            </div>
-          ))}
-        </div>
-
-        {blogPosts.length > entriesPerPage && (
-          <div className="pagination-wrapper">
-            <button
-              className="arrow"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              aria-label="Previous page"
-            >
-              ‹
-            </button>
-
-            <div className="pagination">
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i + 1}
-                  className={currentPage === i + 1 ? "active" : ""}
-                  onClick={() => handlePageChange(i + 1)}
-                  aria-label={`Go to page ${i + 1}`}
-                />
               ))}
             </div>
 
-            <button
-              className="arrow"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              aria-label="Next page"
-            >
-              ›
-            </button>
+            {blogPosts.length > entriesPerPage && (
+              <div className="pagination-wrapper">
+                <button
+                  className="arrow"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  aria-label="Previous page"
+                >
+                  ‹
+                </button>
+
+                <div className="pagination">
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <button
+                      key={i + 1}
+                      className={currentPage === i + 1 ? "active" : ""}
+                      onClick={() => handlePageChange(i + 1)}
+                      aria-label={`Go to page ${i + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  className="arrow"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  aria-label="Next page"
+                >
+                  ›
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

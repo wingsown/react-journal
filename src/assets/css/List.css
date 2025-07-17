@@ -131,11 +131,12 @@
   }
 }
 
-#home-loader {
+.preloader-content {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 70vh;
+  height: 50vh; /* Adjust as needed */
+  width: 100%;
 }
 
 .preloader-content img.loading-icon {
@@ -167,4 +168,20 @@
   padding: 1rem;
   justify-items: center;
   margin-top: 1.5rem;
+}
+
+@keyframes folder-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.folder-appear {
+  opacity: 0;
+  animation: folder-fade-in 0.4s ease forwards;
 }
