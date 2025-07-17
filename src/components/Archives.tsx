@@ -50,17 +50,19 @@ const Archives: React.FC = () => {
       <div className="container">
         <h2>Archives</h2>
         <div className="folder-grid">
-          {Object.entries(groupedPosts).map(([year, posts], index) => (
-            <Folder
-              key={year}
-              year={year}
-              posts={posts}
-              clickedYear={clickedYear}
-              onClick={handleFolderClick}
-              className="folder-appear"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            />
-          ))}
+          {Object.entries(groupedPosts)
+            .sort(([a], [b]) => Number(b) - Number(a))
+            .map(([year, posts], index) => (
+              <Folder
+                key={year}
+                year={year}
+                posts={posts}
+                clickedYear={clickedYear}
+                onClick={handleFolderClick}
+                className="folder-appear"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              />
+            ))}
         </div>
       </div>
     </section>
