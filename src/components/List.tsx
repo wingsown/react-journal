@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, useSearchParams, useParams } from "react-router-dom"
 import "../index.css"
 import "../assets/css/List.css"
 import { BlogPost } from "../types/blogData"
@@ -8,7 +8,11 @@ import icon4 from "../assets/icons/Icon_4.png"
 import { collection, getDocs, query, orderBy } from "firebase/firestore"
 import { db } from "../firebase"
 
-const List: React.FC = () => {
+interface ListProps {
+  year?: number
+}
+
+const List: React.FC<ListProps> = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -18,6 +22,8 @@ const List: React.FC = () => {
   const [fadeClass, setFadeClass] = useState("fade-in")
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const { year } = useParams()
+  const filterYear = year ? parseInt(year, 10) : undefined
 
   const handlePageChange = (page: number) => {
     setFadeClass("fade-out")
@@ -63,7 +69,10 @@ const List: React.FC = () => {
             year: data.year,
           }
         }) as BlogPost[]
-        setBlogPosts(blogData)
+        const filtered = filterYear
+          ? blogData.filter((post) => post.year === filterYear)
+          : blogData
+        setBlogPosts(filtered)
       } catch (error) {
         console.error("Error fetching blog posts:", error)
         setError("Failed fetching blog posts 😢")
@@ -72,7 +81,7 @@ const List: React.FC = () => {
       }
     }
     fetchBlogs()
-  }, [])
+  }, [year])
 
   useEffect(() => {
     const pageFromURL = parseInt(searchParams.get("page") || "1", 10)
@@ -86,66 +95,64 @@ const List: React.FC = () => {
   const currentPosts = blogPosts.slice(indexOfFirstPost, indexOfLastPost)
   const totalPages = Math.ceil(blogPosts.length / entriesPerPage)
 
-  if (loading) {
-    return (
-      <section className="section" id="home-loader">
-        <div className="preloader-content">
-          <img src={icon4} className="loading-icon" alt="Loading..." />
-        </div>
-      </section>
-    )
-  }
-
   return (
     <section className="section">
-      <div className="blog-list container">
+      <div className="container">
         <h2>Archives</h2>
 
-        <div className={`blog-entries ${fadeClass}`} key={currentPage}>
-          {currentPosts.map((blog) => (
-            <div className="blog-preview" key={blog.id}>
-              <Link to={`blogs/${blog.id}`}>
-                <h2>{blog.title}</h2>
-                <p>{blog.summary}</p>
-                <div className="blog-meta">
-                  <p>{blog.countryEmoji}</p>
-                  <p>{blog.year}</p>
+        {loading ? (
+          <div className="preloader-content">
+            <img src={icon4} className="loading-icon" alt="Loading..." />
+          </div>
+        ) : (
+          <div className="blog-list">
+            <div className={`blog-entries ${fadeClass}`} key={currentPage}>
+              {currentPosts.map((blog) => (
+                <div className="blog-preview" key={blog.id}>
+                  <Link to={`blogs/${blog.id}`}>
+                    <h2>{blog.title}</h2>
+                    <p>{blog.summary}</p>
+                    <div className="blog-meta">
+                      <p>{blog.countryEmoji}</p>
+                      <p>{blog.year}</p>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-            </div>
-          ))}
-        </div>
-
-        {blogPosts.length > entriesPerPage && (
-          <div className="pagination-wrapper">
-            <button
-              className="arrow"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              aria-label="Previous page"
-            >
-              ‹
-            </button>
-
-            <div className="pagination">
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i + 1}
-                  className={currentPage === i + 1 ? "active" : ""}
-                  onClick={() => handlePageChange(i + 1)}
-                  aria-label={`Go to page ${i + 1}`}
-                />
               ))}
             </div>
 
-            <button
-              className="arrow"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              aria-label="Next page"
-            >
-              ›
-            </button>
+            {blogPosts.length > entriesPerPage && (
+              <div className="pagination-wrapper">
+                <button
+                  className="arrow"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  aria-label="Previous page"
+                >
+                  ‹
+                </button>
+
+                <div className="pagination">
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <button
+                      key={i + 1}
+                      className={currentPage === i + 1 ? "active" : ""}
+                      onClick={() => handlePageChange(i + 1)}
+                      aria-label={`Go to page ${i + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  className="arrow"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  aria-label="Next page"
+                >
+                  ›
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
