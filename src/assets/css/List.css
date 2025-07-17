@@ -158,3 +158,13 @@
     opacity: 0.7;
   }
 }
+
+/* FOLDER IN ARCHIVES  */
+.folder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  justify-items: center;
+  margin-top: 1.5rem;
+}
