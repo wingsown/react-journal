@@ -144,7 +144,10 @@ const Journal = () => {
         )}
 
         <div className="archives-button-wrapper left">
-          <button onClick={() => navigate("/archives")} className="back-button">
+          <button
+            onClick={() => navigate(`/archives/${post.year}`)}
+            className="back-button"
+          >
             Back
           </button>
         </div>
