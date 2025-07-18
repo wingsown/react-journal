@@ -77,7 +77,7 @@ const Journal = () => {
 
   const paragraphs = post.content.replace(/\\n/g, "\n").split("\n\n")
   const folder = `${post.year}/${post.slug}`
-  const maxImages = 15
+  const maxImages = 30
 
   const fallbackFolder = `${post.year}/${post.slug
     .toLowerCase()
