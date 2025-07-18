@@ -185,3 +185,45 @@
   opacity: 0;
   animation: folder-fade-in 0.4s ease forwards;
 }
+
+/* ARCHIVES BUTTON */
+.archives-button-wrapper {
+  display: flex;
+  margin-top: 20px;
+}
+
+.archives-button-wrapper.right {
+  justify-content: flex-end;
+}
+
+.archives-button-wrapper.left {
+  justify-content: flex-start;
+}
+
+.archives-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #262626;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.archives-button:hover {
+  color: #000;
+}
+
+.arrow-icon {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.archives-button:hover .arrow-icon {
+  transform: translateX(4px);
+}
+
+.archives-button-wrapper.left .archives-button:hover .arrow-icon {
+  transform: translateX(-4px);
+}

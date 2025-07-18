@@ -155,6 +155,12 @@ const List: React.FC<ListProps> = () => {
             )}
           </div>
         )}
+
+        <div className="archives-button-wrapper left">
+          <Link to="/archives" className="archives-button">
+            <span className="arrow-icon">←</span> Back to Archives
+          </Link>
+        </div>
       </div>
     </section>
   )
