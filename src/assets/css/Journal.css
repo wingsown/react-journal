@@ -19,19 +19,6 @@
   line-height: 1.6;
 }
 
-.back-button {
-  margin-bottom: 1rem;
-  background: none;
-  border: none;
-  color: #262626;
-  font-size: 14px;
-  cursor: pointer;
-  font-family: "Poppins", sans-serif;
-}
-.back-button:hover {
-  text-decoration: underline;
-}
-
 .journal-image {
   width: 100%;
   max-width: 100%;
@@ -94,4 +81,33 @@
     transform: scale(1);
     opacity: 0.8;
   }
+}
+
+/* ARCHIVES BUTTON */
+.back-button {
+  background: none;
+  border: none;
+  color: #262626;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  transition: color 0.3s ease;
+}
+
+.back-button:hover {
+  color: #000;
+}
+
+.back-button::before {
+  content: "←";
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.back-button:hover::before {
+  transform: translateX(-4px);
 }
