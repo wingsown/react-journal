@@ -18,10 +18,11 @@ import { db } from "../firebase"
 const Journal = () => {
   const { id } = useParams()
   const [post, setPost] = useState<BlogPost | null>(null)
-  const navigate = useNavigate()
   const [error, setError] = useState(null)
+  const [images, setImages] = useState<string[]>([])
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -32,7 +33,7 @@ const Journal = () => {
 
         if (docSnap.exists()) {
           const data = docSnap.data()
-          setPost({
+          const blogData: BlogPost = {
             id: docSnap.id,
             title: data.title,
             summary: data.summary,
@@ -41,13 +42,19 @@ const Journal = () => {
             year: data.year,
             date: data.date,
             slug: data.slug,
-          })
+          }
+          setPost(blogData)
+
+          // fetch available images from ImageKit
+          const folder = `${data.year}/${data.slug}`
+          const validImages = await getJournalImages(folder, 30)
+          setImages(validImages)
         } else {
-          console.warn("No such blog post in Firestore")
           setPost(null)
+          setError("Post not found")
         }
       } catch (error) {
-        console.error("Error fetching blog post:", error)
+        console.error("Error fetching post:", error)
         setPost(null)
         setError("Failed fetching post 😢")
       }
@@ -75,19 +82,11 @@ const Journal = () => {
     )
   }
 
+  if (error) {
+    return <div className="section error">{error}</div>
+  }
+
   const paragraphs = post.content.replace(/\\n/g, "\n").split("\n\n")
-  const folder = `${post.year}/${post.slug}`
-  const maxImages = 30
-
-  const fallbackFolder = `${post.year}/${post.slug
-    .toLowerCase()
-    .replace(/\s+/g, "-")}`
-
-  const images = getJournalImages(
-    post.slug ? folder : fallbackFolder,
-    maxImages
-  )
-
   const inlinePositions = getInlineImagePositions(paragraphs.length)
 
   return (
