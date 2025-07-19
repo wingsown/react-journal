@@ -4,25 +4,22 @@ export const getJournalImages = async (
   folder: string,
   maxCount: number
 ): Promise<string[]> => {
-  const images: string[] = []
+  const urls = Array.from(
+    { length: maxCount },
+    (_, i) => `${IMAGEKIT_BASE_URL}/${folder}/image_${i + 1}.png`
+  )
 
-  for (let i = 1; i <= maxCount; i++) {
-    const url = `${IMAGEKIT_BASE_URL}/${folder}/image_${i}.png`
-
-    const exists = await new Promise<boolean>((resolve) => {
+  const checkExistence = (url: string): Promise<string | null> =>
+    new Promise((resolve) => {
       const img = new Image()
       img.src = url
-
-      img.onload = () => resolve(true)
-      img.onerror = () => resolve(false)
+      img.onload = () => resolve(url)
+      img.onerror = () => resolve(null)
     })
 
-    if (exists) {
-      images.push(url)
-    }
-  }
+  const results = await Promise.all(urls.map(checkExistence))
 
-  return images
+  return results.filter((url): url is string => url !== null)
 }
 
 export const getInlineImagePositions = (paragraphCount: number): number[] => {
