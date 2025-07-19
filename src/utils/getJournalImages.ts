@@ -1,15 +1,42 @@
-export const getJournalImages = (folder: string, count: number): string[] => {
+const IMAGEKIT_BASE_URL = "https://ik.imagekit.io/wilsonbuena"
+
+export const getJournalImages = async (
+  folder: string,
+  maxCount: number
+): Promise<string[]> => {
   const images: string[] = []
-  for (let i = 1; i <= count; i++) {
-    try {
-      const image = require(`../assets/photos/${folder}/image_${i}.png`)
-      images.push(image.default || image)
-    } catch (err) {
-      console.warn(`Missing image: ${folder}/image_${i}.png`)
+
+  for (let i = 1; i <= maxCount; i++) {
+    const url = `${IMAGEKIT_BASE_URL}/${folder}/image_${i}.png`
+
+    const exists = await new Promise<boolean>((resolve) => {
+      const img = new Image()
+      img.src = url
+
+      img.onload = () => resolve(true)
+      img.onerror = () => resolve(false)
+    })
+
+    if (exists) {
+      images.push(url)
     }
   }
+
   return images
 }
+
+// export const getJournalImages = (folder: string, count: number): string[] => {
+//   const images: string[] = []
+//   for (let i = 1; i <= count; i++) {
+//     try {
+//       const image = require(`../assets/photos/${folder}/image_${i}.png`)
+//       images.push(image.default || image)
+//     } catch (err) {
+//       console.warn(`Missing image: ${folder}/image_${i}.png`)
+//     }
+//   }
+//   return images
+// }
 
 export const getInlineImagePositions = (paragraphCount: number): number[] => {
   if (paragraphCount < 3) return [0]
