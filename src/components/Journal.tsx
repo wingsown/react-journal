@@ -145,16 +145,7 @@ const Journal = () => {
         )}
 
         <div className="archives-button-wrapper left">
-          <button
-            onClick={() => {
-              if (location.state?.from) {
-                navigate(location.state.from) // ✅ returns to /archives?page=X or /archives
-              } else {
-                navigate("/archives")
-              }
-            }}
-            className="back-button"
-          >
+          <button onClick={() => navigate(from)} className="back-button">
             Back
           </button>
         </div>
