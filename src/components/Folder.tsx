@@ -28,7 +28,9 @@ const Folder: React.FC<FolderProps> = ({
       setActive(true)
       onClick(year)
       setTimeout(() => {
-        navigate(`/archives/${year}`)
+        navigate(`/archives/${year}`, {
+          state: { view: "folder", from: "/archives" },
+        })
       }, 1500) // wait for animation
     }
   }

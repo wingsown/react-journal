@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Link, useSearchParams, useParams } from "react-router-dom"
+import { Link, useSearchParams, useParams, useLocation } from "react-router-dom"
 import "../index.css"
 import "../assets/css/List.css"
 import { BlogPost } from "../types/blogData"
@@ -22,6 +22,10 @@ const List: React.FC<ListProps> = () => {
   const entriesPerPage = 5
   const pageParam = parseInt(searchParams.get("page") || "1", 10)
   const [currentPage, setCurrentPage] = useState(pageParam)
+
+  const location = useLocation()
+  const incomingView = location.state?.view
+  const incomingFrom = location.state?.from
 
   const handlePageChange = (page: number) => {
     setFadeClass("fade-out")

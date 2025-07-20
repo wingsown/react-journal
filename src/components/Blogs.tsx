@@ -1,6 +1,6 @@
 // Blogs.tsx
 import React from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { BlogPost } from "../types/blogData"
 
 interface BlogsProps {
@@ -20,12 +20,19 @@ const Blogs: React.FC<BlogsProps> = ({
   fadeClass,
   showPagination = true,
 }) => {
+  const location = useLocation()
   return (
     <div className="blog-list">
       <div className={`blog-entries ${fadeClass}`} key={currentPage}>
         {blogPosts.map((blog) => (
           <div className="blog-preview" key={blog.id}>
-            <Link to={`/archives/${blog.year}/blogs/${blog.id}`}>
+            <Link
+              to={`/archives/${blog.year}/blogs/${blog.id}`}
+              state={{
+                from: location.pathname + location.search,
+                view: "list",
+              }}
+            >
               <h2>{blog.title}</h2>
               <p>{blog.summary}</p>
               <div className="blog-meta">
