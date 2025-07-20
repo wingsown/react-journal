@@ -227,3 +227,22 @@
 .archives-button-wrapper.left .archives-button:hover .arrow-icon {
   transform: translateX(-4px);
 }
+
+/* TEST */
+.test {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.view-toggle .uil {
+  cursor: pointer;
+  font-size: 1.6rem;
+  color: var(--first-color);
+  transition: transform 0.2s ease;
+}
+
+.view-toggle .uil:hover {
+  transform: scale(1.1);
+}

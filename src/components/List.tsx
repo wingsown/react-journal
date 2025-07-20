@@ -4,26 +4,24 @@ import "../index.css"
 import "../assets/css/List.css"
 import { BlogPost } from "../types/blogData"
 import icon4 from "../assets/icons/Icon_4.png"
-
 import { collection, getDocs, query, orderBy } from "firebase/firestore"
 import { db } from "../firebase"
+import Blogs from "./Blogs"
 
-interface ListProps {
-  year?: number
-}
+interface ListProps {}
 
 const List: React.FC<ListProps> = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
   const [searchParams, setSearchParams] = useSearchParams()
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [fadeClass, setFadeClass] = useState("fade-in")
+  const { year } = useParams()
+  const filterYear = year ? parseInt(year, 10) : undefined
 
   const entriesPerPage = 5
   const pageParam = parseInt(searchParams.get("page") || "1", 10)
   const [currentPage, setCurrentPage] = useState(pageParam)
-  const [fadeClass, setFadeClass] = useState("fade-in")
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-  const { year } = useParams()
-  const filterYear = year ? parseInt(year, 10) : undefined
 
   const handlePageChange = (page: number) => {
     setFadeClass("fade-out")
@@ -33,22 +31,6 @@ const List: React.FC<ListProps> = () => {
       setFadeClass("fade-in")
     }, 200)
   }
-
-  // MOCK DATA
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const res = await fetch("http://localhost:3000/blogs")
-  //       if (!res.ok) throw new Error("Server offline")
-  //       const data = await res.json()
-  //       setBlogPosts(data)
-  //     } catch (err) {
-  //       console.warn("Falling back to static data", err)
-  //       setBlogPosts(fallbackPosts)
-  //     }
-  //   }
-  //   fetchData()
-  // }, [])
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -105,62 +87,22 @@ const List: React.FC<ListProps> = () => {
             <img src={icon4} className="loading-icon" alt="Loading..." />
           </div>
         ) : (
-          <div className="blog-list">
-            <div className={`blog-entries ${fadeClass}`} key={currentPage}>
-              {currentPosts.map((blog) => (
-                <div className="blog-preview" key={blog.id}>
-                  <Link to={`blogs/${blog.id}`}>
-                    <h2>{blog.title}</h2>
-                    <p>{blog.summary}</p>
-                    <div className="blog-meta">
-                      <p>{blog.countryEmoji}</p>
-                      <p>{blog.year}</p>
-                    </div>
-                  </Link>
-                </div>
-              ))}
+          <>
+            <Blogs
+              blogPosts={currentPosts}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              handlePageChange={handlePageChange}
+              fadeClass={fadeClass}
+            />
+
+            <div className="archives-button-wrapper left">
+              <Link to="/archives" className="archives-button">
+                <span className="arrow-icon">←</span> Back to Archives
+              </Link>
             </div>
-
-            {blogPosts.length > entriesPerPage && (
-              <div className="pagination-wrapper">
-                <button
-                  className="arrow"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  aria-label="Previous page"
-                >
-                  ‹
-                </button>
-
-                <div className="pagination">
-                  {Array.from({ length: totalPages }, (_, i) => (
-                    <button
-                      key={i + 1}
-                      className={currentPage === i + 1 ? "active" : ""}
-                      onClick={() => handlePageChange(i + 1)}
-                      aria-label={`Go to page ${i + 1}`}
-                    />
-                  ))}
-                </div>
-
-                <button
-                  className="arrow"
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  aria-label="Next page"
-                >
-                  ›
-                </button>
-              </div>
-            )}
-          </div>
+          </>
         )}
-
-        <div className="archives-button-wrapper left">
-          <Link to="/archives" className="archives-button">
-            <span className="arrow-icon">←</span> Back to Archives
-          </Link>
-        </div>
       </div>
     </section>
   )
