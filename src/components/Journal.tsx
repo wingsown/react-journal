@@ -49,7 +49,7 @@ const Journal = () => {
 
           // fetch available images from ImageKit
           const folder = `${data.year}/${data.slug}`
-          const validImages = await getJournalImages(folder, 30)
+          const validImages = await getJournalImages(folder, 50)
           setImages(validImages)
         } else {
           setPost(null)
