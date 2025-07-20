@@ -84,22 +84,24 @@ const Archives: React.FC = () => {
   return (
     <section className="section">
       <div className="container">
-        <div className="test">
+        <div className="toggle-container">
           <h2>Archives</h2>
           <div className="view-toggle">
-            {view === "folder" ? (
-              <i
-                className="uil uil-list-ul"
-                onClick={() => setView("list")}
-                title="Switch to List View"
-              ></i>
-            ) : (
-              <i
-                className="uil uil-folder"
-                onClick={() => setView("folder")}
-                title="Switch to Folder View"
-              ></i>
-            )}
+            <span key={view} className="toggle-icon">
+              {view === "folder" ? (
+                <i
+                  className="uil uil-list-ul"
+                  onClick={() => setView("list")}
+                  title="Switch to List View"
+                ></i>
+              ) : (
+                <i
+                  className="uil uil-folder"
+                  onClick={() => setView("folder")}
+                  title="Switch to Folder View"
+                ></i>
+              )}
+            </span>
           </div>
         </div>
 
