@@ -62,7 +62,13 @@ const Home: React.FC = () => {
         <div className={`blog-entries ${fadeClass}`}>
           {blogPosts.map((blog) => (
             <div className="blog-preview" key={blog.id}>
-              <Link to={`blogs/${blog.id}`}>
+              <Link
+                to={`blogs/${blog.id}`}
+                state={{
+                  from: "/",
+                  view: "home",
+                }}
+              >
                 <h2>{blog.title}</h2>
                 <p>{blog.summary}</p>
                 <div className="blog-meta">
