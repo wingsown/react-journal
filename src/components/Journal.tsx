@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { BlogPost } from "../types/blogData"
 import "../assets/css/Journal.css"
@@ -23,6 +23,8 @@ const Journal = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from || "/archives"
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -144,7 +146,13 @@ const Journal = () => {
 
         <div className="archives-button-wrapper left">
           <button
-            onClick={() => navigate(`/archives/${post.year}`)}
+            onClick={() => {
+              if (location.state?.from) {
+                navigate(location.state.from) // ✅ returns to /archives?page=X or /archives
+              } else {
+                navigate("/archives")
+              }
+            }}
             className="back-button"
           >
             Back
