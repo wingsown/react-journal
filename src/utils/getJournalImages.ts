@@ -4,20 +4,33 @@ export const getJournalImages = async (
   folder: string,
   maxCount: number
 ): Promise<string[]> => {
-  const urls = Array.from(
-    { length: maxCount },
-    (_, i) => `${IMAGEKIT_BASE_URL}/${folder}/image_${i + 1}.png`
-  )
+  const basePath = `${IMAGEKIT_BASE_URL}/${folder}`
 
-  const checkExistence = (url: string): Promise<string | null> =>
-    new Promise((resolve) => {
-      const img = new Image()
-      img.src = url
-      img.onload = () => resolve(url)
-      img.onerror = () => resolve(null)
+  const extensions = ["png", "jpg", "jpeg", "PNG", "JPG", "JPEG"]
+
+  const checkExistence = (index: number): Promise<string | null> =>
+    new Promise(async (resolve) => {
+      for (const ext of extensions) {
+        const url = `${basePath}/image_${index}.${ext}`
+
+        const result = await new Promise<string | null>((res) => {
+          const img = new Image()
+          img.src = url
+          img.onload = () => res(url)
+          img.onerror = () => res(null)
+        })
+
+        if (result) {
+          return resolve(result)
+        }
+      }
+
+      resolve(null)
     })
 
-  const results = await Promise.all(urls.map(checkExistence))
+  const results = await Promise.all(
+    Array.from({ length: maxCount }, (_, i) => checkExistence(i + 1))
+  )
 
   return results.filter((url): url is string => url !== null)
 }
