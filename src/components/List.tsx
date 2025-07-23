@@ -7,15 +7,17 @@ import icon4 from "../assets/icons/Icon_4.png"
 import { collection, getDocs, query, orderBy } from "firebase/firestore"
 import { db } from "../firebase"
 import Blogs from "./Blogs"
+import Sort from "./Sort"
+import { SortOrder } from "../utils/sortUtil"
 
-interface ListProps {}
-
-const List: React.FC<ListProps> = () => {
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
+const List: React.FC = () => {
+  const [rawPosts, setRawPosts] = useState<BlogPost[]>([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [fadeClass, setFadeClass] = useState("fade-in")
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc")
+
   const { year } = useParams()
   const filterYear = year ? parseInt(year, 10) : undefined
 
@@ -24,8 +26,6 @@ const List: React.FC<ListProps> = () => {
   const [currentPage, setCurrentPage] = useState(pageParam)
 
   const location = useLocation()
-  const incomingView = location.state?.view
-  const incomingFrom = location.state?.from
 
   const handlePageChange = (page: number) => {
     setFadeClass("fade-out")
@@ -36,14 +36,17 @@ const List: React.FC<ListProps> = () => {
     }, 200)
   }
 
+  const toggleSortOrder = () => {
+    setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
+  }
+
   useEffect(() => {
     const fetchBlogs = async () => {
+      setLoading(true)
       try {
-        const blogQuery = query(
-          collection(db, "blogs"),
-          orderBy("date", "desc")
+        const snapshot = await getDocs(
+          query(collection(db, "blogs"), orderBy("date", sortOrder))
         )
-        const snapshot = await getDocs(blogQuery)
         const blogData = snapshot.docs.map((doc) => {
           const data = doc.data()
           return {
@@ -53,12 +56,15 @@ const List: React.FC<ListProps> = () => {
             content: data.content,
             countryEmoji: data.countryEmoji,
             year: data.year,
+            date: data.date,
           }
         }) as BlogPost[]
+
         const filtered = filterYear
           ? blogData.filter((post) => post.year === filterYear)
           : blogData
-        setBlogPosts(filtered)
+
+        setRawPosts(filtered)
       } catch (error) {
         console.error("Error fetching blog posts:", error)
         setError("Failed fetching blog posts 😢")
@@ -66,8 +72,9 @@ const List: React.FC<ListProps> = () => {
         setLoading(false)
       }
     }
+
     fetchBlogs()
-  }, [year])
+  }, [year, sortOrder]) // 🔁 refetch when sortOrder changes
 
   useEffect(() => {
     const pageFromURL = parseInt(searchParams.get("page") || "1", 10)
@@ -76,20 +83,29 @@ const List: React.FC<ListProps> = () => {
     )
   }, [searchParams])
 
+  // ⛓️ Pagination
   const indexOfLastPost = currentPage * entriesPerPage
   const indexOfFirstPost = indexOfLastPost - entriesPerPage
-  const currentPosts = blogPosts.slice(indexOfFirstPost, indexOfLastPost)
-  const totalPages = Math.ceil(blogPosts.length / entriesPerPage)
+  const currentPosts = rawPosts.slice(indexOfFirstPost, indexOfLastPost)
+  const totalPages = Math.ceil(rawPosts.length / entriesPerPage)
 
   return (
     <section className="section">
       <div className="container">
-        <h2>Archives</h2>
+        <div className="toggle-container">
+          <h2>Archives</h2>
+          <div>
+            <Sort sortOrder={sortOrder} onToggle={toggleSortOrder} />
+            <i className="uil uil-filter"></i>
+          </div>
+        </div>
 
         {loading ? (
           <div className="preloader-content">
             <img src={icon4} className="loading-icon" alt="Loading..." />
           </div>
+        ) : error ? (
+          <p className="error-text">{error}</p>
         ) : (
           <>
             <Blogs
