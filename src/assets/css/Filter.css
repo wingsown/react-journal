@@ -2,12 +2,13 @@
   position: relative;
   display: inline-block;
   margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .filter-icon-button {
   background: none;
   border: none;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   cursor: pointer;
   transition: color 0.2s;
   padding: 0.25rem;
@@ -15,10 +16,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.filter-icon-button:hover {
-  color: #444;
 }
 
 .filter-dropdown-menu {
@@ -33,7 +30,11 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   display: flex;
   gap: 4px;
-  min-width: auto;
+  flex-wrap: nowrap;
+  min-width: max-content;
+  max-width: 100vw;
+  overflow-x: auto;
+  box-sizing: border-box;
 }
 
 .filter-item {
@@ -42,6 +43,8 @@
   font-size: 1rem;
   border-radius: 4px;
   transition: background 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .filter-item:hover {
@@ -51,4 +54,24 @@
 .filter-item.active {
   font-weight: bold;
   background-color: #d6f0ff;
+}
+
+/* Grid layout for smaller screens */
+@media (max-width: 600px) {
+  .filter-dropdown-menu {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Adjust this value as needed */
+    gap: 6px;
+    padding: 0.5rem;
+    max-width: 90vw;
+    box-sizing: border-box;
+  }
+
+  .filter-item {
+    justify-content: center;
+    text-align: center;
+    padding: 0.4rem;
+    font-size: 1.05rem;
+    white-space: nowrap;
+  }
 }

@@ -9,8 +9,9 @@ import icon4 from "../assets/icons/Icon_4.png"
 import Blogs from "./Blogs"
 import { useLocation, useSearchParams } from "react-router-dom"
 import Sort from "./Sort"
-
-type SortOrder = "asc" | "desc"
+import Filter from "./Filter"
+import { SortOrder } from "../utils/sortUtil"
+import { filterByCountry } from "../utils/filterUtil"
 
 const Archives: React.FC = () => {
   const [groupedPosts, setGroupedPosts] = useState<Record<string, BlogPost[]>>(
@@ -19,15 +20,18 @@ const Archives: React.FC = () => {
   const [clickedYear, setClickedYear] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [flatPosts, setFlatPosts] = useState<BlogPost[]>([])
+  const [rawPosts, setRawPosts] = useState<BlogPost[]>([])
+  const [availableCountries, setAvailableCountries] = useState<string[]>([])
+  const [emojiFilter, setEmojiFilter] = useState<string | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [fadeClass, setFadeClass] = useState("fade-in")
 
   const [searchParams, setSearchParams] = useSearchParams()
   const pageParam = parseInt(searchParams.get("page") || "1", 10)
   const sortParam = (searchParams.get("sort") as SortOrder) || "desc"
+  const emojiParam = searchParams.get("emoji")
 
   const [sortOrder, setSortOrder] = useState<SortOrder>(sortParam)
-
   const location = useLocation()
   const [view, setView] = useState<"folder" | "list">(() =>
     location.state?.view === "list" ? "list" : "folder"
@@ -50,11 +54,50 @@ const Archives: React.FC = () => {
     setCurrentPage(1)
   }
 
+  const handleFilterChange = (emoji: string) => {
+    const emojiValue = emoji === "all" ? null : emoji
+    setEmojiFilter(emojiValue)
+    const newParams = new URLSearchParams(searchParams)
+    if (emojiValue) {
+      newParams.set("emoji", emojiValue)
+    } else {
+      newParams.delete("emoji")
+    }
+    setSearchParams(newParams)
+  }
+
   useEffect(() => {
     if (location.state?.view === "list") {
       setView("list")
     }
   }, [location.state])
+
+  useEffect(() => {
+    const fetchFlatPosts = async () => {
+      const q = query(collection(db, "blogs"), orderBy("date", sortOrder))
+      const snapshot = await getDocs(q)
+      const posts: BlogPost[] = snapshot.docs.map((doc) => ({
+        ...(doc.data() as BlogPost),
+        id: doc.id,
+      }))
+
+      const uniqueCountries = Array.from(
+        new Set(posts.map((post) => post.countryEmoji))
+      )
+      setAvailableCountries(uniqueCountries)
+
+      const filteredPosts = filterByCountry(posts, emojiFilter)
+
+      setFlatPosts(filteredPosts)
+      setRawPosts(posts)
+      setLoading(false)
+    }
+
+    if (view === "list") {
+      setLoading(true)
+      fetchFlatPosts()
+    }
+  }, [view, sortOrder, emojiFilter])
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -67,40 +110,16 @@ const Archives: React.FC = () => {
       setGroupedPosts(grouped)
       setTimeout(() => setLoading(false), 300)
     }
-    fetchPosts()
-  }, [])
-
-  useEffect(() => {
-    const fetchFlatPosts = async () => {
-      const q = query(collection(db, "blogs"), orderBy("date", "desc"))
-      const snapshot = await getDocs(q)
-      const posts: BlogPost[] = snapshot.docs.map((doc) => ({
-        ...(doc.data() as BlogPost),
-        id: doc.id,
-      }))
-      setFlatPosts(posts)
-    }
-
-    if (view === "list" && flatPosts.length === 0) {
-      fetchFlatPosts()
+    if (view === "folder") {
+      fetchPosts()
     }
   }, [view])
 
-  // Set page and sort from URL if they change
   useEffect(() => {
     setCurrentPage(pageParam)
     setSortOrder(sortParam)
-  }, [pageParam, sortParam])
-
-  const getDateValue = (date: any): number => {
-    return date?.toDate ? date.toDate().getTime() : new Date(date).getTime()
-  }
-
-  const sortedFlatPosts = [...flatPosts].sort((a, b) => {
-    const dateA = getDateValue(a.date)
-    const dateB = getDateValue(b.date)
-    return sortOrder === "asc" ? dateA - dateB : dateB - dateA
-  })
+    setEmojiFilter(emojiParam || null)
+  }, [pageParam, sortParam, emojiParam])
 
   if (loading) {
     return (
@@ -119,7 +138,14 @@ const Archives: React.FC = () => {
           <h2>Archives</h2>
           <div className="view-toggle">
             {view === "list" && (
-              <Sort sortOrder={sortOrder} onToggle={toggleSortOrder} />
+              <>
+                <Sort sortOrder={sortOrder} onToggle={toggleSortOrder} />
+                <Filter
+                  selected={emojiFilter}
+                  onChange={handleFilterChange}
+                  countries={availableCountries}
+                />
+              </>
             )}
             <span key={view} className="toggle-icon">
               {view === "folder" ? (
@@ -157,7 +183,7 @@ const Archives: React.FC = () => {
           </div>
         ) : (
           <Blogs
-            blogPosts={sortedFlatPosts.slice(
+            blogPosts={flatPosts.slice(
               (currentPage - 1) * entriesPerPage,
               currentPage * entriesPerPage
             )}
