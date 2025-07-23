@@ -8,6 +8,9 @@ import "../assets/css/List.css"
 import icon4 from "../assets/icons/Icon_4.png"
 import Blogs from "./Blogs"
 import { useLocation, useSearchParams } from "react-router-dom"
+import Sort from "./Sort"
+
+type SortOrder = "asc" | "desc"
 
 const Archives: React.FC = () => {
   const [groupedPosts, setGroupedPosts] = useState<Record<string, BlogPost[]>>(
@@ -17,19 +20,34 @@ const Archives: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [flatPosts, setFlatPosts] = useState<BlogPost[]>([])
   const [currentPage, setCurrentPage] = useState(1)
-  const entriesPerPage = 5
   const [fadeClass, setFadeClass] = useState("fade-in")
 
-  const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
   const pageParam = parseInt(searchParams.get("page") || "1", 10)
-  const [view, setView] = useState<"folder" | "list">(() => {
-    // default to folder unless incoming navigation says "list"
-    return location.state?.view === "list" ? "list" : "folder"
-  })
+  const sortParam = (searchParams.get("sort") as SortOrder) || "desc"
+
+  const [sortOrder, setSortOrder] = useState<SortOrder>(sortParam)
+
+  const location = useLocation()
+  const [view, setView] = useState<"folder" | "list">(() =>
+    location.state?.view === "list" ? "list" : "folder"
+  )
+
+  const entriesPerPage = 5
 
   const handleFolderClick = (year: string) => {
     setClickedYear(year)
+  }
+
+  const toggleSortOrder = () => {
+    const newOrder = sortOrder === "desc" ? "asc" : "desc"
+    setSortOrder(newOrder)
+
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set("sort", newOrder)
+    newParams.set("page", "1")
+    setSearchParams(newParams)
+    setCurrentPage(1)
   }
 
   useEffect(() => {
@@ -45,13 +63,10 @@ const Archives: React.FC = () => {
       const posts: BlogPost[] = snapshot.docs.map(
         (doc) => doc.data() as BlogPost
       )
-
       const grouped = groupByYear(posts)
-
       setGroupedPosts(grouped)
       setTimeout(() => setLoading(false), 300)
     }
-
     fetchPosts()
   }, [])
 
@@ -71,6 +86,22 @@ const Archives: React.FC = () => {
     }
   }, [view])
 
+  // Set page and sort from URL if they change
+  useEffect(() => {
+    setCurrentPage(pageParam)
+    setSortOrder(sortParam)
+  }, [pageParam, sortParam])
+
+  const getDateValue = (date: any): number => {
+    return date?.toDate ? date.toDate().getTime() : new Date(date).getTime()
+  }
+
+  const sortedFlatPosts = [...flatPosts].sort((a, b) => {
+    const dateA = getDateValue(a.date)
+    const dateB = getDateValue(b.date)
+    return sortOrder === "asc" ? dateA - dateB : dateB - dateA
+  })
+
   if (loading) {
     return (
       <section className="section" id="home-loader">
@@ -87,6 +118,9 @@ const Archives: React.FC = () => {
         <div className="toggle-container">
           <h2>Archives</h2>
           <div className="view-toggle">
+            {view === "list" && (
+              <Sort sortOrder={sortOrder} onToggle={toggleSortOrder} />
+            )}
             <span key={view} className="toggle-icon">
               {view === "folder" ? (
                 <i
@@ -123,7 +157,7 @@ const Archives: React.FC = () => {
           </div>
         ) : (
           <Blogs
-            blogPosts={flatPosts.slice(
+            blogPosts={sortedFlatPosts.slice(
               (currentPage - 1) * entriesPerPage,
               currentPage * entriesPerPage
             )}
@@ -133,6 +167,9 @@ const Archives: React.FC = () => {
               setFadeClass("fade-out")
               setTimeout(() => {
                 setCurrentPage(page)
+                const newParams = new URLSearchParams(searchParams)
+                newParams.set("page", page.toString())
+                setSearchParams(newParams)
                 setFadeClass("fade-in")
               }, 200)
             }}

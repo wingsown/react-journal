@@ -8,9 +8,13 @@ interface SortToggleProps {
   onToggle: () => void
 }
 
-const SortToggle: React.FC<SortToggleProps> = ({ sortOrder, onToggle }) => {
+const Sort: React.FC<SortToggleProps> = ({ sortOrder, onToggle }) => {
   return (
-    <button onClick={onToggle} className="sort-toggle-btn">
+    <button
+      onClick={onToggle}
+      className="sort-toggle-btn"
+      title="Arranged by date"
+    >
       {sortOrder === "desc" ? (
         <i className="uil uil-sort-amount-down"></i>
       ) : (
@@ -20,4 +24,4 @@ const SortToggle: React.FC<SortToggleProps> = ({ sortOrder, onToggle }) => {
   )
 }
 
-export default SortToggle
+export default Sort

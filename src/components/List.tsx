@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Link, useSearchParams, useParams, useLocation } from "react-router-dom"
+import { Link, useSearchParams, useParams } from "react-router-dom"
 import "../index.css"
 import "../assets/css/List.css"
 import { BlogPost } from "../types/blogData"
@@ -16,7 +16,11 @@ const List: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [fadeClass, setFadeClass] = useState("fade-in")
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc")
+
+  const sortParam = searchParams.get("sort") as SortOrder
+  const [sortOrder, setSortOrder] = useState<SortOrder>(
+    sortParam === "asc" ? "asc" : "desc"
+  )
 
   const { year } = useParams()
   const filterYear = year ? parseInt(year, 10) : undefined
@@ -25,19 +29,27 @@ const List: React.FC = () => {
   const pageParam = parseInt(searchParams.get("page") || "1", 10)
   const [currentPage, setCurrentPage] = useState(pageParam)
 
-  const location = useLocation()
-
   const handlePageChange = (page: number) => {
     setFadeClass("fade-out")
     setTimeout(() => {
       setCurrentPage(page)
-      setSearchParams({ page: page.toString() })
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev)
+        newParams.set("page", page.toString())
+        return newParams
+      })
       setFadeClass("fade-in")
     }, 200)
   }
 
   const toggleSortOrder = () => {
-    setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
+    const newOrder = sortOrder === "desc" ? "asc" : "desc"
+    setSortOrder(newOrder)
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev)
+      newParams.set("sort", newOrder)
+      return newParams
+    })
   }
 
   useEffect(() => {
@@ -74,16 +86,20 @@ const List: React.FC = () => {
     }
 
     fetchBlogs()
-  }, [year, sortOrder]) // 🔁 refetch when sortOrder changes
+  }, [year, sortOrder])
 
   useEffect(() => {
     const pageFromURL = parseInt(searchParams.get("page") || "1", 10)
     setCurrentPage((prevPage) =>
       pageFromURL !== prevPage ? pageFromURL : prevPage
     )
+
+    const sortFromURL = searchParams.get("sort") as SortOrder
+    if (sortFromURL && sortFromURL !== sortOrder) {
+      setSortOrder(sortFromURL)
+    }
   }, [searchParams])
 
-  // ⛓️ Pagination
   const indexOfLastPost = currentPage * entriesPerPage
   const indexOfFirstPost = indexOfLastPost - entriesPerPage
   const currentPosts = rawPosts.slice(indexOfFirstPost, indexOfLastPost)

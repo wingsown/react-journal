@@ -4,7 +4,6 @@
   font-size: 1.2rem;
   color: var(--first-color);
   cursor: pointer;
-
   margin-right: 1rem;
   transition: transform 0.3s ease, color 0.3s ease;
 }
