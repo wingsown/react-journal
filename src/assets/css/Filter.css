@@ -60,7 +60,7 @@
 @media (max-width: 600px) {
   .filter-dropdown-menu {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Adjust this value as needed */
+    grid-template-columns: repeat(4, 1fr);
     gap: 6px;
     padding: 0.5rem;
     max-width: 90vw;
