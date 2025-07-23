@@ -243,10 +243,6 @@
   transition: transform 0.3s ease;
 }
 
-.view-toggle .uil:hover {
-  transform: scale(1.1);
-}
-
 .toggle-icon {
   display: inline-block;
   animation: fadeScale 0.3s ease;
