@@ -1,34 +1,34 @@
 // Define all valid reaction types as a union type
-export type ReactionType = "like" | "love" | "haha" | "wow" | "sad" | "angry"
+export type ReactionType = "smile" | "hundred" | "haha" | "wow" | "sad" | "fire"
 
 // List of all valid reaction options
 export const reactionOptions: ReactionType[] = [
-  "like",
-  "love",
+  "smile",
+  "hundred",
   "haha",
   "wow",
   "sad",
-  "angry",
+  "fire",
 ]
 
 // Maps each reaction to its emoji
 export const emojiMap: Record<ReactionType, string> = {
-  like: "👍",
-  love: "❤️",
+  smile: "🙂",
+  hundred: "💯",
   haha: "😂",
   wow: "😮",
   sad: "😢",
-  angry: "😡",
+  fire: "🔥",
 }
 
 // Maps each reaction to a readable label (for tooltip, alt text, etc.)
 export const reactionLabels: Record<ReactionType, string> = {
-  like: "Like",
-  love: "Love",
+  smile: "Smile",
+  hundred: "Hundred",
   haha: "Haha",
   wow: "Wow",
   sad: "Sad",
-  angry: "Angry",
+  fire: "Fire",
 }
 
 // Utility to get emoji by reaction type
