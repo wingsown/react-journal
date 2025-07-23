@@ -30,7 +30,8 @@
 .reaction-bubble {
   position: absolute;
   top: -48px;
-  left: 0;
+  right: 0; /* align to left of parent */
+  transform: none; /* remove centering */
   display: flex;
   gap: 8px;
   background: #ffffff;
@@ -39,6 +40,15 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   z-index: 100;
   animation: fadeIn 0.2s ease-out;
+
+  max-width: 90vw;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.reaction-bubble::-webkit-scrollbar {
+  display: none;
 }
 
 .reaction-bubble-emoji {
