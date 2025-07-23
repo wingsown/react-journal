@@ -1,10 +1,18 @@
 // Define all valid reaction types as a union type
-export type ReactionType = "smile" | "hundred" | "haha" | "wow" | "sad" | "fire"
+export type ReactionType =
+  | "smile"
+  | "hundred"
+  | "heart"
+  | "haha"
+  | "wow"
+  | "sad"
+  | "fire"
 
 // List of all valid reaction options
 export const reactionOptions: ReactionType[] = [
   "smile",
   "hundred",
+  "heart",
   "haha",
   "wow",
   "sad",
@@ -15,6 +23,7 @@ export const reactionOptions: ReactionType[] = [
 export const emojiMap: Record<ReactionType, string> = {
   smile: "🙂",
   hundred: "💯",
+  heart: "❤️",
   haha: "😂",
   wow: "😮",
   sad: "😢",
@@ -25,6 +34,7 @@ export const emojiMap: Record<ReactionType, string> = {
 export const reactionLabels: Record<ReactionType, string> = {
   smile: "Smile",
   hundred: "Hundred",
+  heart: "Heart",
   haha: "Haha",
   wow: "Wow",
   sad: "Sad",
