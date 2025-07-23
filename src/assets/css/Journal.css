@@ -111,3 +111,10 @@
 .back-button:hover::before {
   transform: translateX(-4px);
 }
+
+.reaction-bottom-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 24px;
+  margin-top: 32px;
+}
