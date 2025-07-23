@@ -9,10 +9,11 @@ import {
   getJournalImages,
   getInlineImagePositions,
 } from "../utils/getJournalImages"
-
+import { reactionOptions, ReactionType } from "../utils/reactions"
+import ReactionBar from "./ReactionBar"
 import icon4 from "../assets/icons/Icon_4.png"
 
-import { doc, getDoc } from "firebase/firestore"
+import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore"
 import { db } from "../firebase"
 
 const Journal = () => {
@@ -22,9 +23,23 @@ const Journal = () => {
   const [images, setImages] = useState<string[]>([])
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
+  const [reactionCounts, setReactionCounts] = useState<
+    Partial<Record<ReactionType, number>>
+  >({})
+  const [userReaction, setUserReaction] = useState<ReactionType | undefined>()
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from || "/archives"
+
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -47,10 +62,24 @@ const Journal = () => {
           }
           setPost(blogData)
 
-          // fetch available images from ImageKit
           const folder = `${data.year}/${data.slug}`
           const validImages = await getJournalImages(folder, 50)
           setImages(validImages)
+
+          // Load reactions
+          const reactionDoc = await getDoc(doc(db, "reactions", id))
+          if (reactionDoc.exists()) {
+            const data = reactionDoc.data()
+            setReactionCounts(data.reactions || {})
+          }
+
+          // Load user reaction from localStorage
+          const localReaction = localStorage.getItem(
+            `reaction-${id}`
+          ) as ReactionType | null
+          if (localReaction && reactionOptions.includes(localReaction)) {
+            setUserReaction(localReaction)
+          }
         } else {
           setPost(null)
           setError("Post not found")
@@ -64,6 +93,98 @@ const Journal = () => {
 
     fetchBlog()
   }, [id])
+
+  useEffect(() => {
+    if (!id) return
+
+    const fetchReactions = async () => {
+      try {
+        const reactionRef = doc(db, "reactions", id)
+        const docSnap = await getDoc(reactionRef)
+        if (docSnap.exists()) {
+          setReactionCounts(docSnap.data().reactions || {})
+        }
+      } catch (err) {
+        console.error("Failed to fetch reactions:", err)
+      }
+    }
+
+    fetchReactions()
+    setUserReaction(
+      localStorage.getItem(`reaction-${id}`) as ReactionType | null
+    )
+  }, [id])
+
+  const handleReact = async (reaction: ReactionType) => {
+    if (!id) return
+
+    const previousReaction = localStorage.getItem(
+      `reaction-${id}`
+    ) as ReactionType | null
+    const isSameReaction = previousReaction === reaction
+
+    const reactionRef = doc(db, "reactions", id)
+
+    try {
+      const reactionDoc = await getDoc(reactionRef)
+
+      const currentData = reactionDoc.exists()
+        ? reactionDoc.data()
+        : {
+            reactions: {},
+          }
+
+      const currentCounts = currentData.reactions || {}
+
+      const updates: Record<string, any> = {}
+
+      if (isSameReaction) {
+        // User is removing their reaction
+        updates[`reactions.${reaction}`] = Math.max(
+          (currentCounts[reaction] || 1) - 1,
+          0
+        )
+        localStorage.removeItem(`reaction-${id}`)
+        setUserReaction(null)
+
+        setReactionCounts((prev) => ({
+          ...prev,
+          [reaction]: Math.max((prev[reaction] || 1) - 1, 0),
+        }))
+      } else {
+        // User is changing or adding a reaction
+        if (previousReaction) {
+          // Decrease old reaction
+          updates[`reactions.${previousReaction}`] = Math.max(
+            (currentCounts[previousReaction] || 1) - 1,
+            0
+          )
+        }
+
+        // Increase new reaction
+        updates[`reactions.${reaction}`] = (currentCounts[reaction] || 0) + 1
+
+        localStorage.setItem(`reaction-${id}`, reaction)
+        setUserReaction(reaction)
+
+        setReactionCounts((prev) => ({
+          ...prev,
+          [previousReaction ?? ""]: previousReaction
+            ? Math.max((prev[previousReaction] || 1) - 1, 0)
+            : undefined,
+          [reaction]: (prev[reaction] || 0) + 1,
+        }))
+      }
+
+      if (reactionDoc.exists()) {
+        await updateDoc(reactionRef, updates)
+      } else {
+        await setDoc(reactionRef, { reactions: { [reaction]: 1 } })
+      }
+    } catch (err) {
+      console.error("Error reacting:", err)
+    }
+  }
 
   const generateHash = (str: string): string => {
     let hash = 0
@@ -121,7 +242,6 @@ const Journal = () => {
           })}
         </div>
 
-        {/* 🖼 Masonry-style gallery */}
         {images.length > inlinePositions.length && (
           <div className="masonry-gallery">
             {images.slice(inlinePositions.length).map((img, i) => {
@@ -149,6 +269,15 @@ const Journal = () => {
             Back
           </button>
         </div>
+
+        <ReactionBar
+          postId={post.id}
+          userReaction={userReaction}
+          setUserReaction={setUserReaction}
+          reactionCounts={reactionCounts}
+          setReactionCounts={setReactionCounts}
+          handleReact={handleReact}
+        />
       </article>
 
       {lightboxOpen && (
