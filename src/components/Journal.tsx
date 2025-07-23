@@ -264,25 +264,23 @@ const Journal = () => {
           </div>
         )}
 
-        <div className="journal-header-controls">
-          <div className="archives-button-wrapper left">
-            <button onClick={() => navigate(from)} className="back-button">
-              Back
-            </button>
-          </div>
-
-          <div className="reaction-fixed-wrapper">
-            <ReactionBar
-              postId={post.id}
-              userReaction={userReaction}
-              setUserReaction={setUserReaction}
-              reactionCounts={reactionCounts}
-              setReactionCounts={setReactionCounts}
-              handleReact={handleReact}
-            />
-          </div>
+        <div className="archives-button-wrapper left">
+          <button onClick={() => navigate(from)} className="back-button">
+            Back
+          </button>
         </div>
       </article>
+
+      <div className="reaction-bottom-wrapper">
+        <ReactionBar
+          postId={post.id}
+          userReaction={userReaction}
+          setUserReaction={setUserReaction}
+          reactionCounts={reactionCounts}
+          setReactionCounts={setReactionCounts}
+          handleReact={handleReact}
+        />
+      </div>
 
       {lightboxOpen && (
         <Lightbox

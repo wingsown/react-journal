@@ -30,8 +30,8 @@
 .reaction-bubble {
   position: absolute;
   top: -48px;
-  right: 0; /* align to left of parent */
-  transform: none; /* remove centering */
+  right: 0;
+  transform: none;
   display: flex;
   gap: 8px;
   background: #ffffff;
