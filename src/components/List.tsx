@@ -8,7 +8,9 @@ import { collection, getDocs, query, orderBy } from "firebase/firestore"
 import { db } from "../firebase"
 import Blogs from "./Blogs"
 import Sort from "./Sort"
+import Filter from "./Filter"
 import { SortOrder } from "../utils/sortUtil"
+import { filterByCountry } from "../utils/filterUtil"
 
 const List: React.FC = () => {
   const [rawPosts, setRawPosts] = useState<BlogPost[]>([])
@@ -18,9 +20,14 @@ const List: React.FC = () => {
   const [fadeClass, setFadeClass] = useState("fade-in")
 
   const sortParam = searchParams.get("sort") as SortOrder
+  const emojiParam = searchParams.get("emoji")
   const [sortOrder, setSortOrder] = useState<SortOrder>(
     sortParam === "asc" ? "asc" : "desc"
   )
+  const [emojiFilter, setEmojiFilter] = useState<string | null>(
+    emojiParam || null
+  )
+  const [availableCountries, setAvailableCountries] = useState<string[]>([])
 
   const { year } = useParams()
   const filterYear = year ? parseInt(year, 10) : undefined
@@ -52,6 +59,20 @@ const List: React.FC = () => {
     })
   }
 
+  const handleFilterChange = (emoji: string) => {
+    const emojiValue = emoji === "all" ? null : emoji
+    setEmojiFilter(emojiValue)
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev)
+      if (emojiValue) {
+        newParams.set("emoji", emojiValue)
+      } else {
+        newParams.delete("emoji")
+      }
+      return newParams
+    })
+  }
+
   useEffect(() => {
     const fetchBlogs = async () => {
       setLoading(true)
@@ -59,6 +80,7 @@ const List: React.FC = () => {
         const snapshot = await getDocs(
           query(collection(db, "blogs"), orderBy("date", sortOrder))
         )
+
         const blogData = snapshot.docs.map((doc) => {
           const data = doc.data()
           return {
@@ -72,11 +94,18 @@ const List: React.FC = () => {
           }
         }) as BlogPost[]
 
-        const filtered = filterYear
+        const filteredByYear = filterYear
           ? blogData.filter((post) => post.year === filterYear)
           : blogData
 
-        setRawPosts(filtered)
+        const uniqueCountries = Array.from(
+          new Set(filteredByYear.map((post) => post.countryEmoji))
+        )
+        setAvailableCountries(uniqueCountries)
+
+        const finalFiltered = filterByCountry(filteredByYear, emojiFilter)
+
+        setRawPosts(finalFiltered)
       } catch (error) {
         console.error("Error fetching blog posts:", error)
         setError("Failed fetching blog posts 😢")
@@ -86,7 +115,7 @@ const List: React.FC = () => {
     }
 
     fetchBlogs()
-  }, [year, sortOrder])
+  }, [year, sortOrder, emojiFilter])
 
   useEffect(() => {
     const pageFromURL = parseInt(searchParams.get("page") || "1", 10)
@@ -97,6 +126,11 @@ const List: React.FC = () => {
     const sortFromURL = searchParams.get("sort") as SortOrder
     if (sortFromURL && sortFromURL !== sortOrder) {
       setSortOrder(sortFromURL)
+    }
+
+    const emojiFromURL = searchParams.get("emoji")
+    if (emojiFromURL !== emojiFilter) {
+      setEmojiFilter(emojiFromURL || null)
     }
   }, [searchParams])
 
@@ -112,7 +146,11 @@ const List: React.FC = () => {
           <h2>Archives</h2>
           <div>
             <Sort sortOrder={sortOrder} onToggle={toggleSortOrder} />
-            <i className="uil uil-filter"></i>
+            <Filter
+              selected={emojiFilter}
+              onChange={handleFilterChange}
+              countries={availableCountries}
+            />
           </div>
         </div>
 
