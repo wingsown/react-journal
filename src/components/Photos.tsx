@@ -113,7 +113,7 @@ const Photos = () => {
               alt={`Photo ${index + 1}`}
               className={`masonry-photo ${
                 loadedImages.has(img) ? "loaded" : "loading"
-              }`}
+              } ${filmMode ? "film-frame" : ""}`}
               loading="lazy"
               onLoad={() => setLoadedImages((prev) => new Set(prev).add(img))}
               onError={() => {
