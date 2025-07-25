@@ -8,6 +8,8 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "firebase": "^11.10.0",
+    "imagekit": "^6.0.0",
+    "imagekit-javascript": "^4.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.3",

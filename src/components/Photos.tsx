@@ -32,7 +32,7 @@ const Photos = () => {
         : [selectedYear]
 
     setLoading(true)
-    getGalleryImages(sourceYears, 100, filmMode ? "Film" : "Photos")
+    getGalleryImages(sourceYears, 160, filmMode ? "Film" : "Photos")
       .then((fetchedImages) => setImages(shuffleArray(fetchedImages)))
       .finally(() => setLoading(false))
   }, [selectedYear, filmMode])
@@ -110,6 +110,9 @@ const Photos = () => {
               }`}
               loading="lazy"
               onLoad={() => setLoadedImages((prev) => new Set(prev).add(img))}
+              onError={() => {
+                setImages((prev) => prev.filter((i) => i !== img))
+              }}
               onClick={() => {
                 setLightboxIndex(index)
                 setLightboxOpen(true)
