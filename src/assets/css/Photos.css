@@ -203,3 +203,10 @@
     opacity: 0.7;
   }
 }
+/* Film-style image frame */
+.masonry-photo.film-frame {
+  background: #fdfdf9;
+  padding: 6px 6px 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
