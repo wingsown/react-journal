@@ -26,6 +26,7 @@
   transition: all 0.2s ease;
   font-size: 1.25rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: var(--first-color);
 }
 
 .filter-icon:hover {
@@ -60,6 +61,16 @@
 @media (min-width: 768px) {
   .masonry-gallery {
     column-count: 3;
+  }
+
+  .filter-icon {
+    top: 5rem;
+    right: 2rem;
+  }
+
+  .filter-dropdown {
+    top: 8.125rem;
+    right: 1.25rem;
   }
 }
 
