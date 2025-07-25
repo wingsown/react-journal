@@ -21,6 +21,7 @@ const Photos = () => {
   const [filmMode, setFilmMode] = useState(false)
   const [loading, setLoading] = useState(true)
   const filterContainerRef = useRef<HTMLDivElement>(null)
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     const sourceYears =
@@ -104,8 +105,11 @@ const Photos = () => {
               key={img}
               src={img}
               alt={`Photo ${index + 1}`}
-              className="masonry-photo"
+              className={`masonry-photo ${
+                loadedImages.has(img) ? "loaded" : "loading"
+              }`}
               loading="lazy"
+              onLoad={() => setLoadedImages((prev) => new Set(prev).add(img))}
               onClick={() => {
                 setLightboxIndex(index)
                 setLightboxOpen(true)

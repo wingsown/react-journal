@@ -58,7 +58,7 @@
   border: 1px solid #ccc;
   border-radius: 9999px;
   padding: 0.5rem;
-  z-index: 100;
+  z-index: 99;
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 1.25rem;
@@ -123,6 +123,17 @@
   cursor: pointer;
   transition: transform 0.2s ease;
   break-inside: avoid;
+  opacity: 0; /* Start hidden */
+}
+.masonry-photo.loading {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.masonry-photo.loaded {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .masonry-photo:hover {
