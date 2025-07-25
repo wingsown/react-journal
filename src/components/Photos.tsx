@@ -56,35 +56,41 @@ const Photos = () => {
     <section className="photos-section">
       <div ref={filterContainerRef}>
         <div
-          className="filter-icon"
+          className={`filter-container ${showFilters ? "open" : ""}`}
           onClick={() => setShowFilters(!showFilters)}
         >
-          <i className="uil uil-filter"></i>
-        </div>
+          <div className="filter-icon">
+            <i className="uil uil-filter"></i>
+          </div>
 
-        {showFilters && (
-          <div className="filter-dropdown">
-            <button
-              onClick={() => setSelectedYear("all")}
-              className={`filter-button ${
+          <div className={`filter-dropdown ${showFilters ? "visible" : ""}`}>
+            <div
+              onClick={(e) => {
+                e.stopPropagation()
+                setSelectedYear("all")
+              }}
+              className={`filter-item ${
                 selectedYear === "all" ? "active" : ""
               }`}
             >
               All
-            </button>
+            </div>
             {yearList.map((year) => (
-              <button
+              <div
                 key={year}
-                onClick={() => setSelectedYear(year)}
-                className={`filter-button ${
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setSelectedYear(year)
+                }}
+                className={`filter-item ${
                   selectedYear === year ? "active" : ""
                 }`}
               >
                 {year}
-              </button>
+              </div>
             ))}
           </div>
-        )}
+        </div>
 
         <div
           onClick={() => setFilmMode((prev) => !prev)}
