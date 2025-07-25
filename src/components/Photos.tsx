@@ -68,6 +68,7 @@ const Photos = () => {
               onClick={(e) => {
                 e.stopPropagation()
                 setSelectedYear("all")
+                setShowFilters(false)
               }}
               className={`filter-item ${
                 selectedYear === "all" ? "active" : ""
@@ -81,6 +82,7 @@ const Photos = () => {
                 onClick={(e) => {
                   e.stopPropagation()
                   setSelectedYear(year)
+                  setShowFilters(false)
                 }}
                 className={`filter-item ${
                   selectedYear === year ? "active" : ""
