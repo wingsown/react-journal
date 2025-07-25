@@ -5,7 +5,8 @@ import { getGalleryImages } from "../utils/getGalleryImages"
 import "../assets/css/Photos.css"
 import icon4 from "../assets/icons/Icon_4.png"
 
-const YEARS = [2018, 2019, 2022, 2023, 2024]
+const ALL_YEARS = [2018, 2019, 2022, 2023, 2024]
+const FILM_YEARS = [2023] // Update based on actual folder availability
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   return [...array].sort(() => Math.random() - 0.5)
@@ -17,15 +18,23 @@ const Photos = () => {
   const [lightboxIndex, setLightboxIndex] = useState(0)
   const [selectedYear, setSelectedYear] = useState<number | "all">("all")
   const [showFilters, setShowFilters] = useState(false)
-  const filterContainerRef = useRef<HTMLDivElement>(null)
+  const [filmMode, setFilmMode] = useState(false)
   const [loading, setLoading] = useState(true)
+  const filterContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const yearsToFetch = selectedYear === "all" ? YEARS : [selectedYear]
-    getGalleryImages(yearsToFetch, 100)
+    const sourceYears =
+      selectedYear === "all"
+        ? filmMode
+          ? FILM_YEARS
+          : ALL_YEARS
+        : [selectedYear]
+
+    setLoading(true)
+    getGalleryImages(sourceYears, 100, filmMode ? "Film" : "Photos")
       .then((fetchedImages) => setImages(shuffleArray(fetchedImages)))
       .finally(() => setLoading(false))
-  }, [selectedYear])
+  }, [selectedYear, filmMode])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -39,6 +48,8 @@ const Photos = () => {
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
+
+  const yearList = filmMode ? FILM_YEARS : ALL_YEARS
 
   return (
     <section className="photos-section">
@@ -60,7 +71,7 @@ const Photos = () => {
             >
               All
             </button>
-            {YEARS.map((year) => (
+            {yearList.map((year) => (
               <button
                 key={year}
                 onClick={() => setSelectedYear(year)}
@@ -73,6 +84,13 @@ const Photos = () => {
             ))}
           </div>
         )}
+
+        <div
+          onClick={() => setFilmMode((prev) => !prev)}
+          className={`film-toggle-icon ${filmMode ? "active" : ""}`}
+        >
+          {filmMode ? "📷" : "🎞️"}
+        </div>
       </div>
 
       {loading ? (
