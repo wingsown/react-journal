@@ -27,30 +27,46 @@ const checkExistence = async (
 /**
  * Main image loader
  * @param years Array of years to fetch from
- * @param maxPerFolder Max images per folder (default 50)
+ * @param maxTotal Max images to return (default 50)
  * @param albumType "Photos" | "Film" (folder name)
  */
 export const getGalleryImages = async (
   years: number[],
-  maxPerFolder = 50,
+  maxTotal = 50,
   albumType: "Photos" | "Film" = "Photos"
 ): Promise<string[]> => {
-  const allImages: string[] = []
+  const allValidImages: string[] = []
 
-  for (const year of years) {
+  if (years.length === 1) {
+    // Single folder case
+    const year = years[0]
     const folder = `${year}/${albumType}`
     const folderPath = `${IMAGEKIT_BASE_URL}/${folder}`
 
-    const imagePromises = Array.from({ length: maxPerFolder }, (_, i) =>
+    const imagePromises = Array.from({ length: 50 }, (_, i) =>
       checkExistence(folderPath, `image_${i + 1}`)
     )
 
     const results = await Promise.all(imagePromises)
-    const validImages = results.filter((url): url is string => Boolean(url))
-    allImages.push(...validImages)
+    return results.filter((url): url is string => Boolean(url))
   }
 
-  return allImages
+  // Multiple folders — collect from all then shuffle and slice
+  for (const year of years) {
+    const folder = `${year}/${albumType}`
+    const folderPath = `${IMAGEKIT_BASE_URL}/${folder}`
+
+    const imagePromises = Array.from({ length: 50 }, (_, i) =>
+      checkExistence(folderPath, `image_${i + 1}`)
+    )
+
+    const results = await Promise.all(imagePromises)
+    const valid = results.filter((url): url is string => Boolean(url))
+    allValidImages.push(...valid)
+  }
+
+  // Shuffle and limit total
+  return shuffleArray(allValidImages).slice(0, maxTotal)
 }
 
 /**
@@ -76,4 +92,8 @@ export const getFilmYears = async (years: number[]): Promise<number[]> => {
   )
 
   return years.filter((_, idx) => hasFilm[idx])
+}
+
+const shuffleArray = <T>(array: T[]): T[] => {
+  return [...array].sort(() => Math.random() - 0.5)
 }

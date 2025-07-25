@@ -32,7 +32,7 @@ const Photos = () => {
         : [selectedYear]
 
     setLoading(true)
-    getGalleryImages(sourceYears, 160, filmMode ? "Film" : "Photos")
+    getGalleryImages(sourceYears, 100, filmMode ? "Film" : "Photos")
       .then((fetchedImages) => setImages(shuffleArray(fetchedImages)))
       .finally(() => setLoading(false))
   }, [selectedYear, filmMode])
