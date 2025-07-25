@@ -5,7 +5,7 @@ import { getGalleryImages } from "../utils/getGalleryImages"
 import "../assets/css/Photos.css"
 import icon4 from "../assets/icons/Icon_4.png"
 
-const ALL_YEARS = [2024, 2023, 2022, 2019, 2018]
+const ALL_YEARS = [2024, 2023, 2022, 2021, 2020, 2019, 2018]
 const FILM_YEARS = [2023] // Update based on actual folder availability
 
 const shuffleArray = <T,>(array: T[]): T[] => {

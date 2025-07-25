@@ -43,7 +43,7 @@ export const getGalleryImages = async (
     const folder = `${year}/${albumType}`
     const folderPath = `${IMAGEKIT_BASE_URL}/${folder}`
 
-    const imagePromises = Array.from({ length: 50 }, (_, i) =>
+    const imagePromises = Array.from({ length: 100 }, (_, i) =>
       checkExistence(folderPath, `image_${i + 1}`)
     )
 
