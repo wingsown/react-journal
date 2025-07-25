@@ -3,8 +3,9 @@ import Lightbox from "yet-another-react-lightbox"
 import "yet-another-react-lightbox/styles.css"
 import { getGalleryImages } from "../utils/getGalleryImages"
 import "../assets/css/Photos.css"
+import icon4 from "../assets/icons/Icon_4.png"
 
-const YEARS = [2018, 2019, 2022, 2023]
+const YEARS = [2018, 2019, 2022, 2023, 2024]
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   return [...array].sort(() => Math.random() - 0.5)
@@ -17,12 +18,13 @@ const Photos = () => {
   const [selectedYear, setSelectedYear] = useState<number | "all">("all")
   const [showFilters, setShowFilters] = useState(false)
   const filterContainerRef = useRef<HTMLDivElement>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const yearsToFetch = selectedYear === "all" ? YEARS : [selectedYear]
-    getGalleryImages(yearsToFetch, 150).then((fetchedImages) =>
-      setImages(shuffleArray(fetchedImages))
-    )
+    getGalleryImages(yearsToFetch, 100)
+      .then((fetchedImages) => setImages(shuffleArray(fetchedImages)))
+      .finally(() => setLoading(false))
   }, [selectedYear])
 
   useEffect(() => {
@@ -73,13 +75,13 @@ const Photos = () => {
         )}
       </div>
 
-      <div className="masonry-gallery">
-        {images.length === 0 ? (
-          <div className="under-construction">
-            🚧 This page is under construction. Please check back later!
-          </div>
-        ) : (
-          images.map((img, index) => (
+      {loading ? (
+        <div className="preloader-content">
+          <img src={icon4} className="loading-icon" alt="Loading..." />
+        </div>
+      ) : (
+        <div className="masonry-gallery">
+          {images.map((img, index) => (
             <img
               key={img}
               src={img}
@@ -91,9 +93,9 @@ const Photos = () => {
                 setLightboxOpen(true)
               }}
             />
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
       {lightboxOpen && (
         <Lightbox
