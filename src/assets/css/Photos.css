@@ -127,13 +127,11 @@
   margin: 0 auto;
   padding: 0 1rem;
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition: opacity 0.6s ease;
 }
 
 .masonry-gallery.gallery-loaded {
   opacity: 1;
-  transform: translateY(0);
 }
 
 @media (min-width: 768px) {
@@ -152,20 +150,17 @@
   width: 100%;
   height: auto;
   opacity: 0;
-  transform: scale(0.98);
-  transition: opacity 0.4s ease, transform 0.3s ease;
-  will-change: opacity, transform;
+  transition: opacity 0.4s ease;
+  will-change: opacity;
   display: block;
 }
 
 .masonry-photo.loaded {
   opacity: 1;
-  transform: scale(1);
 }
 
 .masonry-photo.loading {
   opacity: 0;
-  transform: scale(0.98);
 }
 
 .masonry-photo:hover {

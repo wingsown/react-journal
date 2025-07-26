@@ -64,7 +64,7 @@ const Photos = () => {
 
   useEffect(() => {
     if (loading) {
-      const timeout = setTimeout(() => setLoading(false), 7000)
+      const timeout = setTimeout(() => setLoading(false), 4000)
       return () => clearTimeout(timeout)
     }
   }, [loading])
