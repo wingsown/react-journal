@@ -1,24 +1,19 @@
 const IMAGEKIT_BASE_URL = "https://ik.imagekit.io/wilsonbuena"
 
-const extensions = ["jpg", "jpeg", "png", "JPG", "JPEG", "PNG"]
+const extensions = ["webp"]
 
-// Helper to check if an image file exists for a given name and extension
+// Helper to check if an image file exists for a given name and extension using HEAD request
 const checkExistence = async (
   basePath: string,
   baseName: string
 ): Promise<string | null> => {
   for (const ext of extensions) {
-    const url = `${basePath}/${baseName}.${ext}`
+    const url = `${basePath}/${baseName}.${ext}?tr=w-800,q-70` // Use transformed version
     try {
-      await new Promise<void>((resolve, reject) => {
-        const img = new Image()
-        img.src = url
-        img.onload = () => resolve()
-        img.onerror = () => reject()
-      })
-      return url // Return valid URL
+      const res = await fetch(url, { method: "HEAD" })
+      if (res.ok) return url
     } catch {
-      continue
+      // continue to next extension
     }
   }
   return null
@@ -76,15 +71,10 @@ export const getGalleryImages = async (
 export const getFilmYears = async (years: number[]): Promise<number[]> => {
   const hasFilm = await Promise.all(
     years.map(async (year) => {
-      const url = `${IMAGEKIT_BASE_URL}/${year}/Film/image_1.jpg`
+      const url = `${IMAGEKIT_BASE_URL}/${year}/Film/image_1.jpg?tr=w-10,q-1` // super light check
       try {
-        await new Promise<void>((resolve, reject) => {
-          const img = new Image()
-          img.src = url
-          img.onload = () => resolve()
-          img.onerror = () => reject()
-        })
-        return true
+        const res = await fetch(url, { method: "HEAD" })
+        return res.ok
       } catch {
         return false
       }
