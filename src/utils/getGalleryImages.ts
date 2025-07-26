@@ -8,7 +8,7 @@ const checkExistence = async (
   baseName: string
 ): Promise<string | null> => {
   for (const ext of extensions) {
-    const url = `${basePath}/${baseName}.${ext}?tr=w-800,q-70` // Use transformed version
+    const url = `${basePath}/${baseName}.${ext}?tr=fo-auto,q-70` // Use transformed version
     try {
       const res = await fetch(url, { method: "HEAD" })
       if (res.ok) return url
@@ -30,38 +30,28 @@ export const getGalleryImages = async (
   maxTotal = 50,
   albumType: "Photos" | "Film" = "Photos"
 ): Promise<string[]> => {
-  const allValidImages: string[] = []
+  const allImages: string[] = []
 
-  if (years.length === 1) {
-    // Single folder case
-    const year = years[0]
-    const folder = `${year}/${albumType}`
-    const folderPath = `${IMAGEKIT_BASE_URL}/${folder}`
-
-    const imagePromises = Array.from({ length: 100 }, (_, i) =>
-      checkExistence(folderPath, `image_${i + 1}`)
-    )
-
-    const results = await Promise.all(imagePromises)
-    return results.filter((url): url is string => Boolean(url))
-  }
-
-  // Multiple folders — collect from all then shuffle and slice
   for (const year of years) {
-    const folder = `${year}/${albumType}`
-    const folderPath = `${IMAGEKIT_BASE_URL}/${folder}`
+    const manifestUrl = `/manifests/${year}/${albumType}/manifest.json`
 
-    const imagePromises = Array.from({ length: 50 }, (_, i) =>
-      checkExistence(folderPath, `image_${i + 1}`)
-    )
+    try {
+      const res = await fetch(manifestUrl)
+      if (!res.ok) {
+        console.warn(`⚠️ Manifest not found: ${manifestUrl}`)
+        continue
+      }
 
-    const results = await Promise.all(imagePromises)
-    const valid = results.filter((url): url is string => Boolean(url))
-    allValidImages.push(...valid)
+      const data: { src: string }[] = await res.json()
+      const urls = data.map((img) => img.src)
+      allImages.push(...urls)
+    } catch (err) {
+      console.error(`❌ Error loading manifest: ${manifestUrl}`, err)
+    }
   }
 
-  // Shuffle and limit total
-  return shuffleArray(allValidImages).slice(0, maxTotal)
+  // Shuffle and limit
+  return shuffleArray(allImages).slice(0, maxTotal)
 }
 
 /**
@@ -69,11 +59,11 @@ export const getGalleryImages = async (
  * Used to display year filters for film mode
  */
 export const getFilmYears = async (years: number[]): Promise<number[]> => {
-  const hasFilm = await Promise.all(
+  const checks = await Promise.all(
     years.map(async (year) => {
-      const url = `${IMAGEKIT_BASE_URL}/${year}/Film/image_1.jpg?tr=w-10,q-1` // super light check
+      const manifestUrl = `/manifests/${year}/Film/manifest.json`
       try {
-        const res = await fetch(url, { method: "HEAD" })
+        const res = await fetch(manifestUrl, { method: "HEAD" })
         return res.ok
       } catch {
         return false
@@ -81,7 +71,7 @@ export const getFilmYears = async (years: number[]): Promise<number[]> => {
     })
   )
 
-  return years.filter((_, idx) => hasFilm[idx])
+  return years.filter((_, idx) => checks[idx])
 }
 
 const shuffleArray = <T>(array: T[]): T[] => {
