@@ -142,24 +142,22 @@
 
 .masonry-photo {
   width: 100%;
-  margin-bottom: 1rem;
+  height: auto;
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  will-change: opacity, transform;
   display: block;
-  object-fit: cover;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  break-inside: avoid;
-  opacity: 0;
-}
-
-.masonry-photo.loading {
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .masonry-photo.loaded {
   opacity: 1;
   transform: scale(1);
+}
+
+.masonry-photo.loading {
+  opacity: 0;
+  transform: scale(0.95);
 }
 
 .masonry-photo:hover {
