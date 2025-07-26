@@ -126,9 +126,6 @@
   max-width: 1600px;
   margin: 0 auto;
   padding: 0 1rem;
-  opacity: 0;
-  transform: translateY(15px);
-  transition: opacity 1s ease, transform 0.8s ease;
 }
 
 @media (min-width: 768px) {
@@ -146,16 +143,15 @@
 .masonry-photo {
   width: 100%;
   height: auto;
-  opacity: 0;
-  transform: scale(0.98);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-  will-change: opacity, transform;
   display: block;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  break-inside: avoid; /* prevent image breaks between columns */
+  will-change: opacity;
 }
 
 .masonry-photo.loaded {
   opacity: 1;
-  transform: scale(1);
 }
 
 .masonry-photo.loading {

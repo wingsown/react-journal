@@ -64,7 +64,7 @@ const Photos = () => {
 
   useEffect(() => {
     if (loading) {
-      const timeout = setTimeout(() => setLoading(false), 9000)
+      const timeout = setTimeout(() => setLoading(false), 2000)
       return () => clearTimeout(timeout)
     }
   }, [loading])
@@ -131,15 +131,13 @@ const Photos = () => {
               src={img}
               alt={`Photo ${index + 1}`}
               className={`masonry-photo ${
-                loadedImages.has(img) ? "loaded" : "loading"
+                loadedImages.has(img) ? "loaded" : ""
               } ${filmMode ? "film-frame" : ""}`}
               loading="lazy"
               onLoad={() => {
                 setLoadedImages((prev) => {
                   const updated = new Set(prev).add(img)
-                  if (updated.size === totalImages) {
-                    setLoading(false)
-                  }
+                  if (updated.size === totalImages) setLoading(false)
                   return updated
                 })
               }}
