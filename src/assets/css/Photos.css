@@ -126,6 +126,14 @@
   max-width: 1600px;
   margin: 0 auto;
   padding: 0 1rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.masonry-gallery.gallery-loaded {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @media (min-width: 768px) {
@@ -145,7 +153,7 @@
   height: auto;
   opacity: 0;
   transform: scale(0.98);
-  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition: opacity 0.4s ease, transform 0.3s ease;
   will-change: opacity, transform;
   display: block;
 }
@@ -157,7 +165,7 @@
 
 .masonry-photo.loading {
   opacity: 0;
-  transform: scale(0.95);
+  transform: scale(0.98);
 }
 
 .masonry-photo:hover {

@@ -22,6 +22,7 @@ const Photos = () => {
   const [loading, setLoading] = useState(true)
   const filterContainerRef = useRef<HTMLDivElement>(null)
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set())
+  const [totalImages, setTotalImages] = useState(0)
 
   useEffect(() => {
     const sourceYears =
@@ -32,9 +33,18 @@ const Photos = () => {
         : [selectedYear]
 
     setLoading(true)
-    getGalleryImages(sourceYears, 100, filmMode ? "Film" : "Photos")
-      .then((fetchedImages) => setImages(shuffleArray(fetchedImages)))
-      .finally(() => setLoading(false))
+    setLoadedImages(new Set()) // Reset loaded images
+    getGalleryImages(sourceYears, 100, filmMode ? "Film" : "Photos").then(
+      (fetchedImages) => {
+        const shuffled = shuffleArray(fetchedImages)
+        setImages(shuffled)
+        setTotalImages(shuffled.length)
+        // Edge case: if no images, set loading false immediately
+        if (shuffled.length === 0) {
+          setLoading(false)
+        }
+      }
+    )
   }, [selectedYear, filmMode])
 
   useEffect(() => {
@@ -51,6 +61,13 @@ const Photos = () => {
   }, [])
 
   const yearList = filmMode ? FILM_YEARS : ALL_YEARS
+
+  useEffect(() => {
+    if (loading) {
+      const timeout = setTimeout(() => setLoading(false), 7000)
+      return () => clearTimeout(timeout)
+    }
+  }, [loading])
 
   return (
     <section className="photos-section">
@@ -107,7 +124,7 @@ const Photos = () => {
           <img src={icon4} className="loading-icon" alt="Loading..." />
         </div>
       ) : (
-        <div className="masonry-gallery">
+        <div className={`masonry-gallery ${!loading ? "gallery-loaded" : ""}`}>
           {images.map((img, index) => (
             <img
               key={img}
@@ -117,7 +134,15 @@ const Photos = () => {
                 loadedImages.has(img) ? "loaded" : "loading"
               } ${filmMode ? "film-frame" : ""}`}
               loading="lazy"
-              onLoad={() => setLoadedImages((prev) => new Set(prev).add(img))}
+              onLoad={() => {
+                setLoadedImages((prev) => {
+                  const updated = new Set(prev).add(img)
+                  if (updated.size === totalImages) {
+                    setLoading(false)
+                  }
+                  return updated
+                })
+              }}
               onError={() => {
                 setImages((prev) => prev.filter((i) => i !== img))
               }}
