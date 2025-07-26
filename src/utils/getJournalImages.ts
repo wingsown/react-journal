@@ -6,7 +6,7 @@ export const getJournalImages = async (
 ): Promise<string[]> => {
   const basePath = `${IMAGEKIT_BASE_URL}/${folder}`
 
-  const extensions = ["png", "jpg", "jpeg", "PNG", "JPG", "JPEG"]
+  const extensions = ["png", "webp", "jpg", "jpeg", "PNG", "JPG", "JPEG"]
 
   const checkExistence = (index: number): Promise<string | null> =>
     new Promise(async (resolve) => {
