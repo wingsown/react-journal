@@ -26,7 +26,7 @@ const Header: React.FC = () => {
                   isActive ? "nav__link active-link" : "nav__link"
                 }
               >
-                <i className="uil uil-edit nav__icon"></i> Home
+                <i className="uil uil-newspaper nav__icon"></i> Home
               </NavLink>
             </li>
             <li className="nav__item">
