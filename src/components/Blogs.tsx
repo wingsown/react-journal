@@ -1,7 +1,7 @@
-// Blogs.tsx
 import React from "react"
 import { Link, useLocation } from "react-router-dom"
 import { BlogPost } from "../types/blogData"
+import { useSwipeable } from "react-swipeable"
 
 interface BlogsProps {
   blogPosts: BlogPost[]
@@ -21,8 +21,19 @@ const Blogs: React.FC<BlogsProps> = ({
   showPagination = true,
 }) => {
   const location = useLocation()
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (currentPage < totalPages) handlePageChange(currentPage + 1)
+    },
+    onSwipedRight: () => {
+      if (currentPage > 1) handlePageChange(currentPage - 1)
+    },
+    trackMouse: true,
+  })
+
   return (
-    <div className="blog-list">
+    <div className="blog-list" {...swipeHandlers}>
       <div className={`blog-entries ${fadeClass}`} key={currentPage}>
         {blogPosts.map((blog) => (
           <div className="blog-preview" key={blog.id}>
@@ -55,16 +66,9 @@ const Blogs: React.FC<BlogsProps> = ({
             ‹
           </button>
 
-          <div className="pagination">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                className={currentPage === i + 1 ? "active" : ""}
-                onClick={() => handlePageChange(i + 1)}
-                aria-label={`Go to page ${i + 1}`}
-              />
-            ))}
-          </div>
+          <span className="page-indicator">
+            {currentPage} / {totalPages}
+          </span>
 
           <button
             className="arrow"
