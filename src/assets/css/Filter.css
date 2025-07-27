@@ -28,9 +28,9 @@
   padding: 0.25rem;
   z-index: 10;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  display: flex;
-  gap: 4px;
-  flex-wrap: nowrap;
+
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   min-width: max-content;
   max-width: 100vw;
   overflow-x: auto;
