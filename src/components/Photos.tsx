@@ -63,6 +63,10 @@ const Photos = () => {
   const yearList = filmMode ? FILM_YEARS : ALL_YEARS
 
   useEffect(() => {
+    setSelectedYear("all")
+  }, [filmMode])
+
+  useEffect(() => {
     if (loading) {
       const timeout = setTimeout(() => setLoading(false), 3500)
       return () => clearTimeout(timeout)
