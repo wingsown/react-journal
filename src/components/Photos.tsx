@@ -39,7 +39,6 @@ const Photos = () => {
         const shuffled = shuffleArray(fetchedImages)
         setImages(shuffled)
         setTotalImages(shuffled.length)
-        // Edge case: if no images, set loading false immediately
         if (shuffled.length === 0) {
           setLoading(false)
         }
@@ -126,6 +125,16 @@ const Photos = () => {
       {loading ? (
         <div className="preloader-content">
           <img src={icon4} className="loading-icon" alt="Loading..." />
+        </div>
+      ) : images.length === 0 ? (
+        <div className="photos-unavailable">
+          <p
+            style={{ textAlign: "center", padding: "2rem", fontSize: "1.2rem" }}
+          >
+            📸 Oops, I maxed out my photo bandwidth for now 😅
+            <br />
+            Images will be back online this August. Stay tuned!
+          </p>
         </div>
       ) : (
         <div className={`masonry-gallery ${!loading ? "gallery-loaded" : ""}`}>
