@@ -4,7 +4,9 @@ import "../assets/css/Footer.css"
 const Footer: React.FC = () => {
   return (
     <footer className="footer">
-      <p className="footer__copy">Coded with ❤️ by Wilson</p>
+      <p className="footer__copy">
+        Stories from the road ✍️ — A journal by Wilson
+      </p>
     </footer>
   )
 }
