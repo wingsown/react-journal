@@ -5,7 +5,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="footer">
       <p className="footer__copy">
-        Stories from the road ✍️ — A journal by Wilson
+        Stories from the road ✍🏻 — A journal by Wilson
       </p>
     </footer>
   )
