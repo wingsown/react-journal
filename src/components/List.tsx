@@ -22,7 +22,8 @@ const List: React.FC = () => {
   const sortParam = searchParams.get("sort") as SortOrder
   const emojiParam = searchParams.get("emoji")
   const [sortOrder, setSortOrder] = useState<SortOrder>(
-    sortParam === "asc" ? "asc" : "desc"
+    "asc"
+    // sortParam === "asc" ? "asc" : "desc"
   )
   const [emojiFilter, setEmojiFilter] = useState<string | null>(
     emojiParam || null
