@@ -10,4 +10,6 @@ export interface BlogPost {
     date: Timestamp
     slug: string
     travel: boolean
+    country: string
+    region: string
 }

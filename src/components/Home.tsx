@@ -22,6 +22,7 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         const fetchBlogs = async () => {
+             console.log("Firestore project:", db.app.options.projectId)
             try {
                 const blogQuery = query(
                     collection(db, "blogs"),
