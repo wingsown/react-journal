@@ -30,8 +30,9 @@ const List: React.FC = () => {
   )
   const [availableCountries, setAvailableCountries] = useState<string[]>([])
 
-  const { year } = useParams()
+  const { year, country } = useParams()
   const filterYear = year ? parseInt(year, 10) : undefined
+  const filterCountry = country || undefined
 
   const entriesPerPage = 5
   const pageParam = parseInt(searchParams.get("page") || "1", 10)
@@ -92,21 +93,33 @@ const List: React.FC = () => {
             countryEmoji: data.countryEmoji,
             year: data.year,
             date: data.date,
+            country: data.country
           }
         }) as BlogPost[]
 
-        const filteredByYear = filterYear
-          ? blogData.filter((post) => post.year === filterYear)
-          : blogData
+        let finalFiltered = blogData
 
+        if (filterYear) {
+          finalFiltered = finalFiltered.filter((post) => post.year === filterYear)
+        }
+
+        if (filterCountry) {
+          finalFiltered = finalFiltered.filter((post) => post.country === filterCountry)
+        }
+
+        // Generate available countries from the posts before emoji filtering
         const uniqueCountries = Array.from(
-          new Set(filteredByYear.map((post) => post.countryEmoji))
+          new Set(finalFiltered.map((post) => post.countryEmoji))
         )
         setAvailableCountries(uniqueCountries)
 
-        const finalFiltered = filterByCountry(filteredByYear, emojiFilter)
+        // Apply emoji filter last
+        finalFiltered = filterByCountry(finalFiltered, emojiFilter)
 
         setRawPosts(finalFiltered)
+
+        // const finalFiltered = filterByCountry(filteredByCountry, emojiFilter)
+        // setRawPosts(finalFiltered)
       } catch (error) {
         console.error("Error fetching blog posts:", error)
         setError("Failed fetching blog posts 😢")
@@ -172,8 +185,8 @@ const List: React.FC = () => {
             />
 
             <div className="archives-button-wrapper left">
-              <Link to="/archives" className="archives-button">
-                <span className="arrow-icon">←</span> Back to Archives
+              <Link to={filterCountry ? "/country" : "/archives"} className="archives-button">
+                <span className="arrow-icon">←</span> Back
               </Link>
             </div>
           </>

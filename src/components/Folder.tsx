@@ -4,19 +4,21 @@ import { BlogPost } from "../types/blogData"
 import { useNavigate } from "react-router-dom"
 
 interface FolderProps {
-  year: string
+  label: string
   posts: BlogPost[]
-  clickedYear: string | null
-  onClick: (year: string) => void
+  clickedLabel: string | null 
+  onClickLabel: (label: string) => void
   className?: string
   style?: React.CSSProperties
+  type?: "year" | "country" // new optional prop
 }
 
 const Folder: React.FC<FolderProps> = ({
-  year,
+  label,
   posts,
-  clickedYear,
-  onClick,
+  clickedLabel,
+  onClickLabel,
+  type = "year",
   style,
   className,
 }) => {
@@ -24,31 +26,32 @@ const Folder: React.FC<FolderProps> = ({
   const navigate = useNavigate()
 
   const handleClick = () => {
-    if (!clickedYear) {
+    if (!clickedLabel) {
       setActive(true)
-      onClick(year)
+      onClickLabel(label)
+      const basePath = type === "country" ? `/country` : `/archives`
       setTimeout(() => {
-        navigate(`/archives/${year}`, {
+        navigate(`${basePath}/${label}`, {
           state: { view: "folder", from: "/archives" },
         })
       }, 1500) // wait for animation
     }
   }
 
-  const shouldHide = clickedYear && clickedYear !== year
+  const shouldHide = clickedLabel && clickedLabel !== label
 
   return (
     !shouldHide && (
       <div
         className={`minimal-folder 
     ${active ? "open" : ""} 
-    ${clickedYear && clickedYear !== year ? "fade-out" : ""} 
+    ${clickedLabel && clickedLabel !== label ? "fade-out" : ""} 
     ${className || ""}
   `}
         style={style}
         onClick={handleClick}
       >
-        <div className="folder-label">{year}</div>
+        <div className="folder-label">{label}</div>
         <div className="folder-flap" />
         <div className="folder-panel" />
         {active && (

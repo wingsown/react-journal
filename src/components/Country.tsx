@@ -4,6 +4,7 @@ import { collection, getDocs, query, orderBy } from "firebase/firestore"
 import { db } from "../firebase"
 import { BlogPost } from "../types/blogData"
 import { groupByYear } from "../utils/groupByYear"
+import { groupByCountry } from "../utils/groupByCountry"
 import "../assets/css/List.css"
 import icon4 from "../assets/icons/Icon_4.png"
 import Blogs from "./Blogs"
@@ -13,11 +14,12 @@ import Filter from "./Filter"
 import { SortOrder } from "../utils/sortUtil"
 import { filterByCountry } from "../utils/filterUtil"
 
-const Archives: React.FC = () => {
+const Country: React.FC = () => {
   const [groupedPosts, setGroupedPosts] = useState<Record<string, BlogPost[]>>(
     {}
   )
-  const [clickedYear, setClickedYear] = useState<string | null>(null)
+
+  const [clickedCountry, setClickedCountry] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [flatPosts, setFlatPosts] = useState<BlogPost[]>([])
   const [rawPosts, setRawPosts] = useState<BlogPost[]>([])
@@ -39,9 +41,9 @@ const Archives: React.FC = () => {
 
   const entriesPerPage = 5
 
-  const handleFolderClick = (year: string) => {
-    setClickedYear(year)
-  }
+  const handleFolderClick = (country: string) => {
+  setClickedCountry(country)
+}
 
   const toggleSortOrder = () => {
     const newOrder = sortOrder === "desc" ? "asc" : "desc"
@@ -101,12 +103,12 @@ const Archives: React.FC = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const q = query(collection(db, "blogs"), orderBy("year", "desc"))
+      const q = query(collection(db, "blogs"), orderBy("country", "asc"))
       const snapshot = await getDocs(q)
       const posts: BlogPost[] = snapshot.docs.map(
         (doc) => doc.data() as BlogPost
       )
-      const grouped = groupByYear(posts)
+      const grouped = groupByCountry(posts)
       setGroupedPosts(grouped)
       setTimeout(() => setLoading(false), 300)
     }
@@ -168,14 +170,15 @@ const Archives: React.FC = () => {
         {view === "folder" ? (
           <div className="folder-grid">
             {Object.entries(groupedPosts)
-              .sort(([a], [b]) => Number(b) - Number(a))
-              .map(([year, posts], index) => (
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([country, posts], index) => (
                 <Folder
-                  key={year}
-                  label={year}
+                  key={country}
+                  label={country}
                   posts={posts}
-                  clickedLabel={clickedYear}
+                  clickedLabel={clickedCountry}
                   onClickLabel={handleFolderClick}
+                  type="country"
                   className="folder-appear"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 />
@@ -208,4 +211,4 @@ const Archives: React.FC = () => {
   )
 }
 
-export default Archives
+export default Country
