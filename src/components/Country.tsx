@@ -109,7 +109,16 @@ const Country: React.FC = () => {
         (doc) => doc.data() as BlogPost
       )
       const grouped = groupByCountry(posts)
-      setGroupedPosts(grouped)
+
+      const prioritized = "PH 🇵🇭"
+
+      const sortedEntries = Object.entries(grouped).sort(([a], [b]) => {
+        if (a === prioritized) return -1
+        if (b === prioritized) return 1
+        return a.localeCompare(b)
+      })
+
+      setGroupedPosts(Object.fromEntries(sortedEntries))
       setTimeout(() => setLoading(false), 300)
     }
     if (view === "folder") {
@@ -177,7 +186,6 @@ const Country: React.FC = () => {
         {view === "folder" ? (
           <div className="folder-grid">
             {Object.entries(groupedPosts)
-              .sort(([a], [b]) => a.localeCompare(b))
               .map(([country, posts], index) => (
                 <Folder
                   key={country}
