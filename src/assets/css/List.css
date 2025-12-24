@@ -248,6 +248,10 @@
   animation: fadeScale 0.3s ease;
 }
 
+.pinButton {
+  margin-right: 10px
+}
+
 @keyframes fadeScale {
   0% {
     opacity: 0;

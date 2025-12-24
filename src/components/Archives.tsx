@@ -7,7 +7,7 @@ import { groupByYear } from "../utils/groupByYear"
 import "../assets/css/List.css"
 import icon4 from "../assets/icons/Icon_4.png"
 import Blogs from "./Blogs"
-import { useLocation, useSearchParams } from "react-router-dom"
+import { useLocation, useSearchParams, useNavigate } from "react-router-dom"
 import Sort from "./Sort"
 import Filter from "./Filter"
 import { SortOrder } from "../utils/sortUtil"
@@ -33,6 +33,7 @@ const Archives: React.FC = () => {
 
   const [sortOrder, setSortOrder] = useState<SortOrder>(sortParam)
   const location = useLocation()
+  const navigate = useNavigate()
   const [view, setView] = useState<"folder" | "list">(() =>
     location.state?.view === "list" ? "list" : "folder"
   )
@@ -137,6 +138,13 @@ const Archives: React.FC = () => {
         <div className="toggle-container">
           <h2>Archives</h2>
           <div className="view-toggle">
+            {view === "folder" && (
+                <i
+                  className="uil uil-map-marker pinButton"
+                  title="View by country"
+                  onClick={() => navigate("/country")}
+                />
+            )}
             {view === "list" && (
               <>
                 <Sort sortOrder={sortOrder} onToggle={toggleSortOrder} />

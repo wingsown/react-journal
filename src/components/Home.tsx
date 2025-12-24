@@ -100,11 +100,6 @@ const Home: React.FC = () => {
                         View Archives <span className="arrow-icon">→</span>
                     </Link>
                 </div>
-                <div className="archives-button-wrapper right">
-                    <Link to="/country" className="archives-button">
-                        Country <span className="arrow-icon">→</span>
-                    </Link>
-                </div>
             </div>
         </section>
     )
