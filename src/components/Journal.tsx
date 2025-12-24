@@ -60,6 +60,8 @@ const Journal = () => {
                         date: data.date,
                         slug: data.slug,
                         travel: data.travel,
+                        country: data.country,
+                        region: data.region
                     }
                     setPost(blogData)
 
