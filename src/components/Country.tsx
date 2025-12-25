@@ -106,7 +106,7 @@ const Country: React.FC = () => {
       const q = query(collection(db, "blogs"), orderBy("country", "asc"))
       const snapshot = await getDocs(q)
       const posts: BlogPost[] = snapshot.docs.map(
-        (doc) => doc.data() as BlogPost
+        (doc) => ({...doc.data() as BlogPost, id: doc.id})
       )
       const grouped = groupByCountry(posts)
 
