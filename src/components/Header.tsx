@@ -31,7 +31,7 @@ const Header: React.FC = () => {
             </li>
             <li className="nav__item">
               <NavLink
-                to="/archives"
+                to="/country"
                 className={({ isActive }) =>
                   isActive ? "nav__link active-link" : "nav__link"
                 }
