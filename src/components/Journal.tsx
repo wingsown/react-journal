@@ -29,7 +29,7 @@ const Journal = () => {
     const [userReaction, setUserReaction] = useState<ReactionType | undefined>()
     const navigate = useNavigate()
     const location = useLocation()
-    const from = location.state?.from || "/archives"
+    const from = location.state?.from || "/country"
 
     const [isMobile, setIsMobile] = useState(false)
 
