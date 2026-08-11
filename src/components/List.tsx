@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Link, useSearchParams, useParams } from "react-router-dom"
+import { Link, useSearchParams, useParams, useNavigate } from "react-router-dom"
 import "../index.css"
 import "../assets/css/List.css"
 import { BlogPost } from "../types/blogData"
@@ -18,6 +18,7 @@ const List: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [fadeClass, setFadeClass] = useState("fade-in")
+  const navigate = useNavigate()
 
   const sortParam = searchParams.get("sort") as SortOrder
   const emojiParam = searchParams.get("emoji")
@@ -185,9 +186,12 @@ const List: React.FC = () => {
             />
 
             <div className="archives-button-wrapper left">
-              <Link to={filterCountry ? "/country" : "/archives"} className="archives-button">
-                <span className="arrow-icon">←</span> Back
-              </Link>
+              <button
+                onClick={() => navigate(filterCountry ? "/country" : "/archives")}
+                className="back-button"
+              >
+                Back
+              </button>
             </div>
           </>
         )}

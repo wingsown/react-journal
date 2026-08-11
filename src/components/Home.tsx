@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import "../index.css"
 import "../assets/css/List.css"
 import { BlogPost } from "../types/blogData"
@@ -19,6 +19,7 @@ const Home: React.FC = () => {
     const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
     const [fadeClass, setFadeClass] = useState("fade-in")
     const [loading, setLoading] = useState(true)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchBlogs = async () => {
@@ -96,9 +97,12 @@ const Home: React.FC = () => {
                     ))}
                 </div>
                 <div className="archives-button-wrapper right">
-                    <Link to="/country" className="archives-button">
-                        View Archives <span className="arrow-icon">→</span>
-                    </Link>
+                    <button
+                        onClick={() => navigate("/country")}
+                        className="back-button right-arrow"    
+                    >
+                        View Archives
+                    </button>
                 </div>
             </div>
         </section>

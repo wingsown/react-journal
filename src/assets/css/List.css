@@ -269,3 +269,45 @@
   color: #333;
   padding: 0 8px;
 }
+
+.back-button {
+  background: none;
+  border: none;
+  color: #262626;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  transition: color 0.3s ease;
+}
+
+.back-button:hover {
+  color: #000;
+}
+
+.back-button::before {
+  content: "←";
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.back-button:hover::before {
+  transform: translateX(-4px);
+}
+
+.back-button.right-arrow::before {
+  content: none;
+}
+
+.back-button.right-arrow::after {
+  content: "→";
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.back-button.right-arrow:hover::after {
+  transform: translateX(4px);
+}
