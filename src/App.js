@@ -13,6 +13,8 @@ import Journal from "./components/Journal"
 import Photos from "./components/Photos"
 import Archives from "./components/Archives"
 import Country from "./components/Country"
+import Region from "./components/Region"
+import CountryRoute from "./components/CountryRoute"
 
 function AppLayout() {
   const location = useLocation()
@@ -25,13 +27,18 @@ function AppLayout() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/archives" element={<Archives />} />
-          <Route path="/country" element={<Country />} />
-          <Route path="/country/:country" element={<List />} /> 
           <Route path="/archives/:year" element={<List />} />
-          <Route path="/blogs/:id" element={<Journal />} />
           <Route path="/archives/blogs/:id" element={<Journal />} />
           <Route path="/archives/:year/blogs/:id" element={<Journal />} />
+
+          <Route path="/country" element={<Country />} />
+          <Route path="/country/:country" element={<CountryRoute />} /> 
+          <Route path="/country/:country/region/:region" element={<List />} />
+
+          <Route path="/blogs/:id" element={<Journal />} />
+
           <Route path="/photos" element={<Photos />} />
+          
         </Routes>
       </div>
       <Footer />

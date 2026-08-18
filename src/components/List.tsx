@@ -31,9 +31,10 @@ const List: React.FC = () => {
   )
   const [availableCountries, setAvailableCountries] = useState<string[]>([])
 
-  const { year, country } = useParams()
+  const { year, country, region } = useParams()
   const filterYear = year ? parseInt(year, 10) : undefined
   const filterCountry = country || undefined
+  const filterRegion = region || undefined
 
   const entriesPerPage = 5
   const pageParam = parseInt(searchParams.get("page") || "1", 10)
@@ -94,7 +95,8 @@ const List: React.FC = () => {
             countryEmoji: data.countryEmoji,
             year: data.year,
             date: data.date,
-            country: data.country
+            country: data.country,
+            region: data.region
           }
         }) as BlogPost[]
 
@@ -106,6 +108,10 @@ const List: React.FC = () => {
 
         if (filterCountry) {
           finalFiltered = finalFiltered.filter((post) => post.country === filterCountry)
+        }
+
+        if (filterRegion) {
+          finalFiltered = finalFiltered.filter((post) => post.region === filterRegion)
         }
 
         // Generate available countries from the posts before emoji filtering
@@ -130,7 +136,7 @@ const List: React.FC = () => {
     }
 
     fetchBlogs()
-  }, [year, sortOrder, emojiFilter])
+  }, [year, country, region, sortOrder, emojiFilter])
 
   useEffect(() => {
     const pageFromURL = parseInt(searchParams.get("page") || "1", 10)
@@ -187,7 +193,10 @@ const List: React.FC = () => {
 
             <div className="archives-button-wrapper left">
               <button
-                onClick={() => navigate(filterCountry ? "/country" : "/archives")}
+                onClick={
+                  () =>  filterRegion && filterCountry ? navigate(`/country/${filterCountry}`) 
+                  : filterCountry ? navigate("/country") : navigate("/archives")
+                }
                 className="back-button"
               >
                 Back

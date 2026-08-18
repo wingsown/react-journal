@@ -10,7 +10,8 @@ interface FolderProps {
   onClickLabel: (label: string) => void
   className?: string
   style?: React.CSSProperties
-  type?: "year" | "country" // new optional prop
+  type?: "year" | "country" | "region"
+  basePath?: string
 }
 
 const Folder: React.FC<FolderProps> = ({
@@ -21,6 +22,7 @@ const Folder: React.FC<FolderProps> = ({
   type = "year",
   style,
   className,
+  basePath
 }) => {
   const [active, setActive] = useState(false)
   const navigate = useNavigate()
@@ -29,10 +31,10 @@ const Folder: React.FC<FolderProps> = ({
     if (!clickedLabel) {
       setActive(true)
       onClickLabel(label)
-      const basePath = type === "country" ? `/country` : `/archives`
+      const path = basePath || (type === "country" ? "/country" : type === "region" ? "/region" : "/archives")
       setTimeout(() => {
-        navigate(`${basePath}/${label}`, {
-          state: { view: "folder", from: "/archives" },
+        navigate(`${path}/${label}`, {
+          state: { view: "folder", from: "/archives" }
         })
       }, 1500) // wait for animation
     }

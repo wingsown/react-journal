@@ -7,7 +7,7 @@ export interface BlogPost {
     content: string
     countryEmoji: string
     year: number
-    date: Timestamp
+    date?: Timestamp
     slug: string
     travel: boolean
     country: string
